@@ -94,34 +94,6 @@ public class DBpediaSpotlightClient {
     }
 
 
-    /*
-http://spotlight.dbpedia.org/rest/candidates/?spotter=SpotXmlParser&text=
-<annotation text="Brazilian oil giant Petrobras and U.S. oilfield service
-company Halliburton have signed a technological cooperation agreement,
-Petrobras announced Monday. The two companies agreed on three projects:
-studies on contamination of fluids in oil wells, laboratory simulation of
-well production, and research on solidification of salt and carbon dioxide
-formations, said Petrobras. Twelve other projects are still under
-negotiation."><surfaceForm name="Brazilian" offset="0"/><surfaceForm name="
-oil" offset="10"/><surfaceForm name="giant" offset="14"/><surfaceForm name="
-Petrobras" offset="20"/><surfaceForm name="U.S." offset="34"/><surfaceForm
-name="oilfield" offset="39"/><surfaceForm name="service" offset="48"/>
-<surfaceForm name="company" offset="56"/><surfaceForm name="Halliburton"
-offset="64"/><surfaceForm name="signed" offset="81"/><surfaceForm name="
-technological" offset="90"/><surfaceForm name="cooperation" offset="104"/>
-<surfaceForm name="agreement" offset="116"/><surfaceForm name="Petrobras"
-offset="127"/><surfaceForm name="Monday" offset="147"/><surfaceForm name="
-companies" offset="163"/><surfaceForm name="projects" offset="189"/>
-<surfaceForm name="contamination" offset="210"/><surfaceForm name="fluids"
-offset="227"/><surfaceForm name="oil wells" offset="237"/><surfaceForm name
-="laboratory" offset="248"/><surfaceForm name="simulation" offset="259"/>
-<surfaceForm name="production" offset="278"/><surfaceForm name="
-solidification" offset="306"/><surfaceForm name="salt" offset="324"/>
-<surfaceForm name="carbon dioxide" offset="333"/><surfaceForm name="
-Petrobras" offset="365"/><surfaceForm name="Twelve" offset="376"/>
-<surfaceForm name="projects" offset="389"/><surfaceForm name="negotiation"
-offset="414"/></annotation>
-     */
 
     public Document extract(Text text, String host, String port) throws AnnotationException{
 
@@ -129,11 +101,10 @@ offset="414"/></annotation>
 		String spotlightResponse = "";
 		Document doc = null;
 		try {
-		    String url = host + ":" + port +"/rest/disambiguate";
+		    String url = host + ":" + port +"/rest/annotate";
 		    PostMethod method = new PostMethod(url);
-		    //method.setRequestHeader("Content-type","application/x-www-form-urlencoded");
                     method.setRequestHeader("Content-Type","application/x-www-form-urlencoded;charset=utf-8");
-		    NameValuePair[] params = {new NameValuePair("text",text.text()), new NameValuePair("spotter","SpotXmlParser"), new NameValuePair("confidence",Double.toString(CONFIDENCE)), new NameValuePair("support",Integer.toString(SUPPORT))};
+		    NameValuePair[] params = {new NameValuePair("text",text.text()), new NameValuePair("confidence",Double.toString(CONFIDENCE)), new NameValuePair("support",Integer.toString(SUPPORT))};
 		    method.setRequestBody(params);
 		    method.setRequestHeader(new Header("Accept", "text/xml"));
 		    spotlightResponse = request(method);

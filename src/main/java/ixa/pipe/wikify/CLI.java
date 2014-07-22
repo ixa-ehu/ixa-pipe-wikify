@@ -1,7 +1,7 @@
 package ixa.pipe.wikify;
 
 import ixa.kaflib.KAFDocument;
-import ixa.kaflib.Entity;
+import ixa.kaflib.WF;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -30,11 +30,11 @@ public class CLI {
         // specify port
         parser
             .addArgument("-p", "--port")
-            .choices("2010","2020","2030","2040","2050","2060")
+            .choices("2120","2130")
             .required(true)
             .help(
-                "It is REQUIRED to choose a port number. Port numbers are assigned " +
-                "alphabetically by language code: de:2010, en:2020, es:2030, fr:2040, it:2050, nl:2060");
+		  "It is REQUIRED to choose a port number. Port numbers are assigned " +
+		  "alphabetically by language code: en:2120, es:2130");
 
         parser.addArgument("-H", "--host").setDefault("http://localhost").help("Choose hostname in which dbpedia-spotlight rest " +
         		"server is being executed; this value defaults to 'http://localhost'");
@@ -45,12 +45,12 @@ public class CLI {
 
         // catch errors and print help
         try {
-          parsedArguments = parser.parseArgs(args);
+	    parsedArguments = parser.parseArgs(args);
         } catch (ArgumentParserException e) {
-          parser.handleError(e);
-          System.out
-              .println("Run java -jar target/ixa-pipe-ned-1.0.jar -help for details");
-          System.exit(1);
+	    parser.handleError(e);
+	    System.out
+		.println("Run java -jar target/ixa-pipe-wikify-1.0.jar -help for details");
+	    System.exit(1);
         }
 
         /*
@@ -61,26 +61,26 @@ public class CLI {
         String host = parsedArguments.getString("host");
 
     	Annotate annotator = new Annotate();
-		// Input
-		BufferedReader stdInReader = null;
-		// Output
-		BufferedWriter w = null;
+	// Input
+	BufferedReader stdInReader = null;
+	// Output
+	BufferedWriter w = null;
 
-		stdInReader = new BufferedReader(new InputStreamReader(System.in,"UTF-8"));
-		w = new BufferedWriter(new OutputStreamWriter(System.out,"UTF-8"));
-		KAFDocument kaf = KAFDocument.createFromStream(stdInReader);
-
-		String lang = kaf.getLang();
-		KAFDocument.LinguisticProcessor lp = kaf.addLinguisticProcessor("entities", "ixa-pipe-wikify-" + lang, "1.0");
-		lp.setBeginTimestamp();
-
-		List<Entity> entities = kaf.getEntities();
-		if (!entities.isEmpty()){
-		    annotator.disambiguateNEsToKAF(kaf, host, port);
-		}
-		lp.setEndTimestamp();
-		w.write(kaf.toString());
-		w.close();
-	    } 
+	stdInReader = new BufferedReader(new InputStreamReader(System.in,"UTF-8"));
+	w = new BufferedWriter(new OutputStreamWriter(System.out,"UTF-8"));
+	KAFDocument kaf = KAFDocument.createFromStream(stdInReader);
+	
+	String lang = kaf.getLang();
+	KAFDocument.LinguisticProcessor lp = kaf.addLinguisticProcessor("terms", "ixa-pipe-wikify-" + lang, "1.0");
+	lp.setBeginTimestamp();
+		
+	List<WF> wordForms = kaf.getWFs();
+	if (!wordForms.isEmpty()){
+	    annotator.wikificationToKAF(kaf, host, port);
+	}
+	lp.setEndTimestamp();
+	w.write(kaf.toString());
+	w.close();
+    } 
 
 }

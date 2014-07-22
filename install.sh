@@ -38,7 +38,7 @@ echo 'Installing dbpedia-spotlight JAR as a local maven repository...'
 
 mvn install:install-file \
     -Dfile=$spotlight \
-    -DgroupId=ixa -DartifactId=dbpedia-spotlight -Dversion=0.6 \
+    -DgroupId=ixa -DartifactId=dbpedia-spotlight-0.7 -Dversion=0.7 \
     -Dpackaging=jar -DgeneratePom=true
 
 enter_directory "${old_pwd}"
