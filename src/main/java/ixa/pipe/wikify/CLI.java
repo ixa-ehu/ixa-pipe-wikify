@@ -30,11 +30,11 @@ public class CLI {
         // specify port
         parser
             .addArgument("-p", "--port")
-            .choices("2120","2130")
+            .choices("2020","2030")
             .required(true)
             .help(
 		  "It is REQUIRED to choose a port number. Port numbers are assigned " +
-		  "alphabetically by language code: en:2120, es:2130");
+		  "alphabetically by language code: en:2020, es:2030");
 
         parser.addArgument("-H", "--host").setDefault("http://localhost").help("Choose hostname in which dbpedia-spotlight rest " +
         		"server is being executed; this value defaults to 'http://localhost'");
@@ -71,7 +71,7 @@ public class CLI {
 	KAFDocument kaf = KAFDocument.createFromStream(stdInReader);
 	
 	String lang = kaf.getLang();
-	KAFDocument.LinguisticProcessor lp = kaf.addLinguisticProcessor("terms", "ixa-pipe-wikify-" + lang, "1.0");
+	KAFDocument.LinguisticProcessor lp = kaf.addLinguisticProcessor("markables", "ixa-pipe-wikify-" + lang, "1.0");
 	lp.setBeginTimestamp();
 		
 	List<WF> wordForms = kaf.getWFs();

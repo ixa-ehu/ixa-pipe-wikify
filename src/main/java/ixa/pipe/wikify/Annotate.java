@@ -1,16 +1,14 @@
 package ixa.pipe.wikify;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.HashMap;
 
 import ixa.kaflib.KAFDocument;
 import ixa.kaflib.WF;
-import ixa.kaflib.Entity;
 import ixa.kaflib.Term;
 import ixa.kaflib.ExternalRef;
+import ixa.kaflib.Mark;
 
 import org.dbpedia.spotlight.exceptions.AnnotationException;
 import org.dbpedia.spotlight.model.DBpediaResource;
@@ -79,38 +77,43 @@ public class Annotate {
     }
     
     
-    private void XMLSpot2KAF(KAFDocument kaf, Document doc){
+    private void XMLSpot2KAF(KAFDocument kaf, Document spotDoc){
 
-	String resource = "spotlight_v1";
+	String resourceExternalRef = "spotlight";
+	String resourceMarkable = "DBpedia";
 	
-	doc.getDocumentElement().normalize();
-	NodeList nList = doc.getElementsByTagName("Resource");
+	spotDoc.getDocumentElement().normalize();
+	NodeList nList = spotDoc.getElementsByTagName("Resource");
 	
 	for (int temp = 0; temp < nList.getLength(); temp++) {
 	    Node nNode = nList.item(temp);
 	    
 	    if (nNode.getNodeType() == Node.ELEMENT_NODE) {	
 		Element eElement = (Element) nNode;
-		ExternalRef externalRef = kaf.createExternalRef(resource,eElement.getAttribute("URI"));
+		ExternalRef externalRef = kaf.createExternalRef(resourceExternalRef,eElement.getAttribute("URI"));
+		externalRef.setConfidence(Float.valueOf(eElement.getAttribute("similarityScore")));
 		List<Term> spotTerms = getSpotTermsGivenOffset(kaf, new Integer(eElement.getAttribute("offset")), eElement.getAttribute("surfaceForm"));
-		if(spotTerms.size() == 1){
-		    spotTerms.get(0).addExternalRef(externalRef);
-		}
-		else{
-		    String compoundLemma = "";
-		    for (Term t : spotTerms){
-			if(compoundLemma.length() != 0){
-			    compoundLemma += " ";
-			}
-			compoundLemma += t.getLemma();
+		boolean noun = false;
+		String markableLemma = "";
+		for (Term t : spotTerms) {
+		    if(markableLemma.length() != 0){
+			markableLemma += " ";
 		    }
-		    Term compoundTerm = kaf.newCompound(spotTerms, compoundLemma);
-		    compoundTerm.addExternalRef(externalRef);
+		    markableLemma += t.getLemma();
+		    if((t.getPos().compareTo("N") == 0) || (t.getPos().compareTo("R") == 0)){
+			noun = true;
+		    }
+		}
+		if(noun){ // at least one term of the spot has to be a noun
+		    Mark markable = kaf.newMark(resourceMarkable, kaf.newTermSpan(spotTerms));
+		    markable.setLemma(markableLemma);
+		    markable.addExternalRef(externalRef);
 		}
 	    }
 	}
     }
     
+
     
     private List<Term> getSpotTermsGivenOffset(KAFDocument kaf, int offset, String surfaceForm){
 	

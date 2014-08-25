@@ -116,8 +116,8 @@ The ixa-pipe-wikify-1.0.jar requires a KAF or NAF document as standard input and
 provides Wikification as standard output. It also requires the port number as argument.
 The port numbers assigned to each language are the following:
 
-    - en: 2120
-    - es: 2130
+    - en: 2020
+    - es: 2030
 
 **Once you have a DBpedia Spotlight Rest server running you can send queries to it via the ixa-pipe-wikify module as follows:
 
