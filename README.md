@@ -83,7 +83,7 @@ follow the detailed steps)
 
 Download the statistical backend and the models:
 
-   wget http://spotlight.sztaki.hu/downloads/dbpedia-spotlight-0.7.jar
+    wget http://spotlight.sztaki.hu/downloads/dbpedia-spotlight-0.7.jar
  
 Go to the directory the dbpedia-spotlight-0.7.jar is located and execute:
 
@@ -170,11 +170,3 @@ For more options running ixa-pipe-wikify
     E-20018 Donostia-San Sebastián
 
 
-
-
-In a snapshot:
-
- 1. Install dbpedia-spotlight
- 2. Compile ixa-pipe-wikify module with mvn clean package
- 3. Start dbpedia-spotlight server
- 4. cat text.kaf | ixa-pipe-ned/target/ixa-pipe-wikify-1.0.jar -p $PORT_NUMBER
