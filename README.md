@@ -83,7 +83,10 @@ follow the detailed steps)
 
 Download the statistical backend and the models:
 
+````
     wget http://spotlight.sztaki.hu/downloads/dbpedia-spotlight-0.7.jar
+````
+
  
 Go to the directory the dbpedia-spotlight-0.7.jar is located and execute:
 
