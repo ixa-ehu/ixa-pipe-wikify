@@ -88,7 +88,7 @@ Download the statistical backend and the models:
  
 Go to the directory the dbpedia-spotlight-0.7.jar is located and execute:
 
-  mvn install:install-file -Dfile=dbpedia-spotlight-0.7.jar -DgroupId=ixa -DartifactId=dbpedia-spotlight -Dversion=0.7 -Dpackaging=jar -DgeneratePom=true
+    mvn install:install-file -Dfile=dbpedia-spotlight-0.7.jar -DgroupId=ixa -DartifactId=dbpedia-spotlight -Dversion=0.7 -Dpackaging=jar -DgeneratePom=true
 
   This command will install dbpedia-spotlight jar as a local maven repository.
 
