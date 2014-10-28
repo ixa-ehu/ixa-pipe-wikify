@@ -90,7 +90,7 @@ Go to the directory the dbpedia-spotlight-0.7.jar is located and execute:
 
     mvn install:install-file -Dfile=dbpedia-spotlight-0.7.jar -DgroupId=ixa -DartifactId=dbpedia-spotlight -Dversion=0.7 -Dpackaging=jar -DgeneratePom=true
 
-  This command will install dbpedia-spotlight jar as a local maven repository.
+This command will install dbpedia-spotlight jar as a local maven repository.
 
 
 ### 4. Download and update the language models
@@ -100,14 +100,14 @@ machine, you only have to change the parameter as described at the end of this s
 
 Download the language models:
 
-   wget http://spotlight.sztaki.hu/downloads/en_2+2.tar.gz  (English model)
-   wget http://spotlight.sztaki.hu/downloads/es.tar.gz   (Spanish model)
+    wget http://spotlight.sztaki.hu/downloads/en_2+2.tar.gz  (English model)
+    wget http://spotlight.sztaki.hu/downloads/es.tar.gz   (Spanish model)
 
 Untar the language models:
 
-   tar xzvf $lang.tar.gz
+    tar xzvf $lang.tar.gz
 
-  Note: $lang variable refers to "en_2+2" for English, and "es" for Spanish.
+Note: $lang variable refers to "en_2+2" for English, and "es" for Spanish.
 
 Change a parameter in the model in order to do wikification: open the
 $lang/spotter_thresholds.txt file and change the last number to 1.0
@@ -121,12 +121,12 @@ machine and the server is on, you have to stop the server, change the
 model parameter as described in last step and re-start the server as
 described here)
 
-  java -jar dbpedia-spotlight-0.7.jar $lang http://localhost:$port/rest 
+    java -jar dbpedia-spotlight-0.7.jar $lang http://localhost:$port/rest 
 
 
 ### 6. Get module source code
 
-   git clone https://github.com/ixa-ehu/ixa-pipe-wikify
+    git clone https://github.com/ixa-ehu/ixa-pipe-wikify
 
 
 ### 7. Compile
@@ -136,7 +136,7 @@ described here)
 
 This step will create a directory called 'target` which contains various directories and files. Most importantly, there you will find the module executable:
 
-ixa-pipe-wikify-1.0.jar
+    ixa-pipe-wikify-1.0.jar
 
 This executable contains every dependency the module needs, so it is
 completely portable as long as you have a JVM 1.7 installed.
@@ -149,8 +149,8 @@ and provides Wikification as standard output. It also requires the
 port number as argument. The port numbers assigned to each language
 are the following:
 
-    - en: 2020
-    - es: 2030
+   - en: 2020
+   - es: 2030
 
 Once you have a DBpedia Spotlight Rest server running you can send
 queries to it via the ixa-pipe-wikify module as follows:
