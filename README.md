@@ -1,38 +1,38 @@
 # ixa-pipe-wikify
 
 This repository contains the Wikification tool based on DBpedia
-Spotlight. Providing that a DBpedia Spotlight Rest server for a given
-language is running, the ixa-pipe-wikify module takes KAF or NAF (with
-'wf' elements) as input and perform Wikification for your language of
+Spotlight. ixa-pipe-nerc is part of IXA pipes, a multilingual NLP
+pipeline developed by the IXA NLP Group
+[http://ixa2.si.ehu.es/ixa-pipes].
+
+Providing that a DBpedia Spotlight Rest server for a given
+language is running, the ixa-pipe-wikify module takes NAF (with 'wf'
+elements) as input and perform Wikification for your language of
 choice.
 
-Developed by IXA NLP Group (ixa.si.ehu.es) for the 7th Framework
-OpeNER, NewsReader and QTLeap European projects.
 
-### Contents
+### Module contents
 
-The contents of the repository are the following:
+The contents of the module are the following:
 
-    + src/ source files of ixa-pipe-wikify
-    + pom.xml 
-    + pom-naf.xml
-    + README.md: This README
+    + src/   	    java source code of the module
+    + pom.xml 	    maven pom file wich deals with everything related to compilation and execution of the module
+    + README.md	    this README file
+    + Furthermore, the installation process, as described in the README.md, will generate another directory:
+    target/	   it contains binary executable and other directories
 
-## Installation Procedure
 
-In a snapshot:
+## INSTALLATION
 
- 1. Install dbpedia-spotlight
- 2. Compile ixa-pipe-wikify module with mvn clean package
- 3. Start dbpedia-spotlight server
- 4. cat text.kaf | ixa-pipe-ned/target/ixa-pipe-wikify-1.0.jar -p $PORT_NUMBER
+Installing the ixa-pipe-wikify requires the following steps:
 
-If you already have installed in your machine JDK7 and MAVEN 3, please go to step 3
-directly. Otherwise, follow the detailed steps:
+(If you already have installed in your machine the Java 1.7+ and MAVEN
+3, please go to step 3 directly. Otherwise, follow the detailed steps)
 
 ### 1. Install JDK 1.7
 
-If you do not install JDK 1.7 in a default location, you will probably need to configure the PATH in .bashrc or .bash_profile:
+If you do not install JDK 1.7 in a default location, you will probably
+need to configure the PATH in .bashrc or .bash_profile:
 
     export JAVA_HOME=/yourpath/local/java17
     export PATH=${JAVA_HOME}/bin:${PATH}
@@ -49,7 +49,8 @@ If you re-login into your shell and run the command
     java -version
 
 
-You should now see that your jdk is 1.7
+You should now see that your JDK is 1.7.
+
 
 ### 2. Install MAVEN 3
 
@@ -71,61 +72,94 @@ If you re-login into your shell and run the command
 
     mvn -version
 
-
 You should see reference to the MAVEN version you have just installed plus the JDK 7 that is using.
 
-### 3. Download statistical backend - dbpedia spotlight
 
-Downloand from http://spotlight.sztaki.hu/downloads/
-- dbpedia-spotlight-0.7.jar
-- English model: en_2+2.tar.gz
-- Spanish model: es.tar.gz	
+### 3. Download and install statistical backend - DBpedia Spotlight
 
-Decompressed the language models 
-- tar xvf $lang.tar.gz
+(If you already have installed DBpedia Spotlight for ixa-pipe-ned
+module in your machine, please go to step 4 directly. Otherwise,
+follow the detailed steps)
 
-Install dbpedia-spotlight
-- go to the directory the dbpedia-spotlight-0.7.jar is located
-- execute:
+Download the statistical backend and the models:
+
+   wget http://spotlight.sztaki.hu/downloads/dbpedia-spotlight-0.7.jar
+ 
+Go to the directory the dbpedia-spotlight-0.7.jar is located and execute:
+
   mvn install:install-file -Dfile=dbpedia-spotlight-0.7.jar -DgroupId=ixa -DartifactId=dbpedia-spotlight -Dversion=0.7 -Dpackaging=jar -DgeneratePom=true
-  This command will install dbpedia-spotlight jar as a local maven repository
 
-Start the application
-- java -jar dbpedia-spotlight-0.7.jar $lang http://localhost:$port/rest 
+  This command will install dbpedia-spotlight jar as a local maven repository.
 
 
-### 4. Download the ixa-pipe-wikify repository
+### 4. Download and update the language models
 
-    git clone git@github.com:ixa-ehu/ixa-pipe-wikify.git
+(If you already use DBpedia Spotlight for ixa-pipe-ned module in your
+machine, you only have to change the parameter as described at the end of this step)
+
+Download the language models:
+
+   wget http://spotlight.sztaki.hu/downloads/en_2+2.tar.gz  (English model)
+   wget http://spotlight.sztaki.hu/downloads/es.tar.gz   (Spanish model)
+
+Untar the language models:
+
+   tar xzvf $lang.tar.gz
+
+  Note: $lang variable refers to "en_2+2" for English, and "es" for Spanish.
+
+Change a parameter in the model in order to do wikification: open the
+$lang/spotter_thresholds.txt file and change the last number to 1.0
+(you should have something like this: 1.0 0.2 -0.2 1.0)
 
 
-### 5. Install ixa-pipe-wikify
+### 5. Start the DBpedia Spotlight server
 
-Install the ixa-pipe-wikify module
+(If you already use DBpedia Spotlight for ixa-pipe-ned module in your
+machine and the server is on, you have to stop the server, change the
+model parameter as described in last step and re-start the server as
+described here)
 
-To work with KAF files
+  java -jar dbpedia-spotlight-0.7.jar $lang http://localhost:$port/rest 
 
+
+### 6. Get module source code
+
+   git clone https://github.com/ixa-ehu/ixa-pipe-wikify
+
+
+### 7. Compile
+
+    cd ixa-pipe-wikify
     mvn clean package
 
-This command will create a `ixa-pipe-wikify/target` directory containing the
-ixa-pipe-wikify-1.0.jar binary with all dependencies included.
+This step will create a directory called 'target` which contains various directories and files. Most importantly, there you will find the module executable:
 
-### 6. ixa-pipe-wikify USAGE
+ixa-pipe-wikify-1.0.jar
 
-The ixa-pipe-wikify-1.0.jar requires a KAF or NAF document as standard input and
-provides Wikification as standard output. It also requires the port number as argument.
-The port numbers assigned to each language are the following:
+This executable contains every dependency the module needs, so it is
+completely portable as long as you have a JVM 1.7 installed.
+
+
+## USAGE
+
+The ixa-pipe-wikify-1.0.jar requires a NAF document as standard input
+and provides Wikification as standard output. It also requires the
+port number as argument. The port numbers assigned to each language
+are the following:
 
     - en: 2020
     - es: 2030
 
-**Once you have a DBpedia Spotlight Rest server running you can send queries to it via the ixa-pipe-wikify module as follows:
+Once you have a DBpedia Spotlight Rest server running you can send
+queries to it via the ixa-pipe-wikify module as follows:
 
-    cat text.kaf | java -jar ixa-pipe-wikify-1.0.jar -p $PORT_NUMBER
+    cat text.naf | java -jar ixa-pipe-wikify-1.0.jar -p $PORT_NUMBER
 
 For more options running ixa-pipe-wikify
 
     java -jar ixa-pipe-wikify-1.0.jar -h
+
 
 #### Contact information
 
@@ -135,3 +169,12 @@ For more options running ixa-pipe-wikify
     University of the Basque Country (UPV/EHU)
     E-20018 Donostia-San Sebastián
 
+
+
+
+In a snapshot:
+
+ 1. Install dbpedia-spotlight
+ 2. Compile ixa-pipe-wikify module with mvn clean package
+ 3. Start dbpedia-spotlight server
+ 4. cat text.kaf | ixa-pipe-ned/target/ixa-pipe-wikify-1.0.jar -p $PORT_NUMBER

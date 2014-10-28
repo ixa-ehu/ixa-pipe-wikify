@@ -6,9 +6,11 @@
   <packaging>jar</packaging>
   <version>1.0</version>
   <name>ixa-pipe-wikify</name>
-  <description>ixa-pipe-wikify is part of IXA-pipeline and performs Wikification based on DBpedia Spotlight.
-    In principle the pipeline is available for the annotation of English and Spanish texts, but it can be easily extended to
-    deal with other languages too.
+  <description>ixa-pipe-wikify is part of IXA-pipeline and performs
+    Wikification based on DBpedia Spotlight.  In principle the
+    pipeline is available for the annotation of English and Spanish
+    texts, but it can be easily extended to deal with other languages
+    too.
   </description>
   <developers>
     <developer>

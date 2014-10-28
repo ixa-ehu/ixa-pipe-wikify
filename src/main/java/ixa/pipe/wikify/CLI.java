@@ -2,6 +2,7 @@ package ixa.pipe.wikify;
 
 import ixa.kaflib.KAFDocument;
 import ixa.kaflib.WF;
+import ixa.kaflib.Term;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -17,7 +18,7 @@ import net.sourceforge.argparse4j.inf.Namespace;
 
 public class CLI {
 
-    public static void main(String[] args) throws Exception { // throws IOException {
+    public static void main(String[] args) throws Exception {
     	
     	Namespace parsedArguments = null;
 
@@ -60,7 +61,6 @@ public class CLI {
         String port = parsedArguments.getString("port");
         String host = parsedArguments.getString("host");
 
-    	Annotate annotator = new Annotate();
 	// Input
 	BufferedReader stdInReader = null;
 	// Output
@@ -73,14 +73,24 @@ public class CLI {
 	String lang = kaf.getLang();
 	KAFDocument.LinguisticProcessor lp = kaf.addLinguisticProcessor("markables", "ixa-pipe-wikify-" + lang, "1.0");
 	lp.setBeginTimestamp();
-		
-	List<WF> wordForms = kaf.getWFs();
-	if (!wordForms.isEmpty()){
-	    annotator.wikificationToKAF(kaf, host, port);
+
+	Annotate annotator = new Annotate();
+	try{
+	    List<WF> wordForms = kaf.getWFs();
+	    List<Term> terms = kaf.getTerms();
+	    if (!wordForms.isEmpty() && !terms.isEmpty()){
+		annotator.wikificationToKAF(kaf, host, port);
+	    }
 	}
-	lp.setEndTimestamp();
-	w.write(kaf.toString());
-	w.close();
+	catch (Exception e){
+	    System.err.println("Wikification failed: ");
+	    e.printStackTrace();
+	}
+	finally {
+	    lp.setEndTimestamp();
+	    w.write(kaf.toString());
+	    w.close();
+	}
     } 
 
 }

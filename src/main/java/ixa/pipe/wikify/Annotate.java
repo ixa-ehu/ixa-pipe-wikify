@@ -23,12 +23,14 @@ public class Annotate {
 
 
     DBpediaSpotlightClient c;
+   
+
     public Annotate(){
 	c = new DBpediaSpotlightClient ();
     }
     
+
     public void wikificationToKAF (KAFDocument kaf, String host, String port) throws Exception {
-	
 	String text = "";
 
 	int textOffset = 0;
@@ -44,29 +46,11 @@ public class Annotate {
 	    text += wordForm.getForm();
 	    textOffset += wordForm.getLength();
 	}
-   
-   
 
-	//   int pos = 0;
-	//int max = entities.size();
-	//int set = 0;
-	//if (max < 100){
-	//	set = max;
-	//}
-	//else{
-	//	set = 100;
-	//}
-	//while (pos < max){
-	// disambiguate entities, 100 each time. 
+	// TODO: DBpedia-spotlight buffer max size
+
 	Document response = annotate(text, host, port);
-
 	XMLSpot2KAF(kaf,response);
-	//	pos = set;
-	//set+=100;
-	//if (max < set){
-	//    set = max;
-	//}
-	//}
 	
     }
     
@@ -78,7 +62,6 @@ public class Annotate {
     
     
     private void XMLSpot2KAF(KAFDocument kaf, Document spotDoc){
-
 	String resourceExternalRef = "spotlight";
 	String resourceMarkable = "DBpedia";
 	
@@ -105,7 +88,14 @@ public class Annotate {
 		    }
 		}
 		if(noun){ // at least one term of the spot has to be a noun
-		    Mark markable = kaf.newMark(resourceMarkable, kaf.newTermSpan(spotTerms));
+		    List<WF> spotWFs = new ArrayList<WF>();
+		    for(Term t : spotTerms){
+			List<WF> wfs = t.getWFs();
+			for(WF wf : wfs){
+			    spotWFs.add(wf);
+			}
+		    }
+		    Mark markable = kaf.newMark(resourceMarkable, kaf.newWFSpan(spotWFs));
 		    markable.setLemma(markableLemma);
 		    markable.addExternalRef(externalRef);
 		}
@@ -114,9 +104,7 @@ public class Annotate {
     }
     
 
-    
     private List<Term> getSpotTermsGivenOffset(KAFDocument kaf, int offset, String surfaceForm){
-	
 	List<Term> spotTerms = new ArrayList<Term>();
 
 	int sfLength = surfaceForm.length();
@@ -125,7 +113,7 @@ public class Annotate {
 	    WF wf = t.getWFs().get(0);
 	    if(wf.getOffset() == offset){
 		spotTerms.add(t);
-		if(wf.getLength() == sfLength) break;
+		if(wf.getLength() >= sfLength) break;
 		offset += wf.getLength() + 1;
 		sfLength -= wf.getLength() + 1;
 	    }

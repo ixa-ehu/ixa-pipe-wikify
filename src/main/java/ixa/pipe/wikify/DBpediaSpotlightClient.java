@@ -51,6 +51,7 @@ public class DBpediaSpotlightClient {
 
     private static final double CONFIDENCE = 0.0;
     private static final int SUPPORT = 0;
+    private static final boolean COREFERENCE = false;
 
     // Create an instance of HttpClient.
     private static HttpClient client = new HttpClient();
@@ -98,28 +99,28 @@ public class DBpediaSpotlightClient {
     public Document extract(Text text, String host, String port) throws AnnotationException{
 
         LOG.info("Querying API.");
-		String spotlightResponse = "";
-		Document doc = null;
-		try {
-		    String url = host + ":" + port +"/rest/annotate";
-		    PostMethod method = new PostMethod(url);
-                    method.setRequestHeader("Content-Type","application/x-www-form-urlencoded;charset=utf-8");
-		    NameValuePair[] params = {new NameValuePair("text",text.text()), new NameValuePair("confidence",Double.toString(CONFIDENCE)), new NameValuePair("support",Integer.toString(SUPPORT))};
-		    method.setRequestBody(params);
-		    method.setRequestHeader(new Header("Accept", "text/xml"));
-		    spotlightResponse = request(method);
-		    doc = loadXMLFromString(spotlightResponse);
-		}
-		catch (javax.xml.parsers.ParserConfigurationException ex) {
-		}
-		catch (org.xml.sax.SAXException ex) {
-		}
-		catch (java.io.IOException ex) {
-		}
-
-		return doc;
+	String spotlightResponse = "";
+	Document doc = null;
+	try {
+	    String url = host + ":" + port +"/rest/annotate";
+	    PostMethod method = new PostMethod(url);
+	    method.setRequestHeader("Content-Type","application/x-www-form-urlencoded;charset=utf-8");
+	    NameValuePair[] params = {new NameValuePair("text",text.text()), new NameValuePair("confidence",Double.toString(CONFIDENCE)), new NameValuePair("support",Integer.toString(SUPPORT)), new NameValuePair("coreferenceResolution",Boolean.toString(COREFERENCE))};
+	    method.setRequestBody(params);
+	    method.setRequestHeader(new Header("Accept", "text/xml"));
+	    spotlightResponse = request(method);
+	    doc = loadXMLFromString(spotlightResponse);
 	}
-
+	catch (javax.xml.parsers.ParserConfigurationException ex) {
+	}
+	catch (org.xml.sax.SAXException ex) {
+	}
+	catch (java.io.IOException ex) {
+	}
+	
+	return doc;
+    }
+    
     public static Document loadXMLFromString(String xml)  throws org.xml.sax.SAXException, java.io.IOException, javax.xml.parsers.ParserConfigurationException
     {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
