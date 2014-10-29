@@ -7,7 +7,7 @@ pipeline](http://ixa2.si.ehu.es/ixa-pipes) developed by the [IXA NLP
 Group](http://ixa.si.ehu.es/Ixa).
 
 Providing that a DBpedia Spotlight Rest server for a given
-language is running, the ixa-pipe-wikify module takes NAF (with 'wf'
+language is running, the *ixa-pipe-wikify* module takes NAF (with 'wf'
 elements) as input and performs Wikification for your language of
 choice.
 
@@ -25,7 +25,7 @@ The contents of the module are the following:
 
 ## INSTALLATION
 
-Installing the ixa-pipe-wikify requires the following steps:
+Installing the *ixa-pipe-wikify* requires the following steps:
 
 *If you already have installed in your machine the Java 1.7+ and MAVEN
 3, please go to [step
@@ -80,8 +80,8 @@ You should see reference to the MAVEN version you have just installed plus the J
 
 ### 3. Download and install statistical backend - DBpedia Spotlight
 
-*If you already have installed DBpedia Spotlight for [ixa-pipe-ned
-module](https://github.com/ixa-ehu/ixa-pipe-ned/) in your machine,
+*If you already have installed DBpedia Spotlight for *[ixa-pipe-ned
+module](https://github.com/ixa-ehu/ixa-pipe-ned/)* in your machine,
 please go to [step 4](#4-download-and-update-the-language-models)
 directly. Otherwise, follow the detailed steps*
 
@@ -99,8 +99,10 @@ This command will install dbpedia-spotlight jar as a local maven repository.
 
 ### 4. Download and update the language models
 
-*If you already use DBpedia Spotlight for ixa-pipe-ned module in your
-machine, you only have to change the parameter as described at the end of this step*
+*If you already use DBpedia Spotlight for *[ixa-pipe-ned
+module](https://github.com/ixa-ehu/ixa-pipe-ned/)* module in your
+machine, you only have to change the parameter as described at the end
+of this step*
 
 Download the language models:
 
@@ -120,8 +122,8 @@ $lang/spotter_thresholds.txt file and change the last number to 1.0
 
 ### 5. Start the DBpedia Spotlight server
 
-*If you already use DBpedia Spotlight for [ixa-pipe-ned
-module](https://github.com/ixa-ehu/ixa-pipe-ned/) in your machine and
+*If you already use DBpedia Spotlight for *[ixa-pipe-ned
+module](https://github.com/ixa-ehu/ixa-pipe-ned/)* in your machine and
 the server is running at the moment, you have to stop the server,
 change the model parameter as described in the previous step and
 re-start the server as described here*
@@ -151,7 +153,7 @@ completely portable as long as you have a JVM 1.7 installed.
 
 ## USAGE
 
-The ixa-pipe-wikify-1.0.jar requires a NAF document as standard input
+The *ixa-pipe-wikify-1.0.jar* requires a NAF document as standard input
 and provides Wikification as standard output. It also requires the
 port number as argument. The port numbers assigned to each language
 are the following:
@@ -160,11 +162,11 @@ are the following:
    - es: 2030
 
 Once you have a DBpedia Spotlight Rest server running you can send
-queries to it via the ixa-pipe-wikify module as follows:
+queries to it via the *ixa-pipe-wikify* module as follows:
 
     cat text.naf | java -jar ixa-pipe-wikify-1.0.jar -p $PORT_NUMBER
 
-For more options running ixa-pipe-wikify
+For more options running *ixa-pipe-wikify*:
 
     java -jar ixa-pipe-wikify-1.0.jar -h
 
