@@ -1,9 +1,9 @@
 # ixa-pipe-wikify
 
-This repository contains the Wikification tool based on DBpedia
-Spotlight. ixa-pipe-nerc is part of IXA pipes, a multilingual NLP
-pipeline developed by the IXA NLP Group
-[http://ixa2.si.ehu.es/ixa-pipes].
+This repository contains the Wikification tool based on [DBpedia
+Spotlight](https://github.com/dbpedia-spotlight/dbpedia-spotlight/wiki). ixa-pipe-nerc
+is part of IXA pipes, a multilingual NLP pipeline developed by the IXA
+NLP Group [http://ixa2.si.ehu.es/ixa-pipes].
 
 Providing that a DBpedia Spotlight Rest server for a given
 language is running, the ixa-pipe-wikify module takes NAF (with 'wf'
