@@ -64,7 +64,7 @@ Download MAVEN 3 from
 
 Now you need to configure the PATH. For Bash Shell:
 
-    export MAVEN_HOME=/home/ragerri/local/apache-maven-3.0.4
+    export MAVEN_HOME=/yourpath/local/apache-maven-3.0.4
     export PATH=${MAVEN_HOME}/bin:${PATH}
 
 For tcsh shell:
