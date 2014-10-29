@@ -1,7 +1,7 @@
 # ixa-pipe-wikify
 
 This repository contains the Wikification tool based on [DBpedia
-Spotlight](https://github.com/dbpedia-spotlight/dbpedia-spotlight/wiki). ***ixa-pipe-wikify***
+Spotlight](https://github.com/dbpedia-spotlight/dbpedia-spotlight/wiki). *ixa-pipe-wikify*
 is part of IXA pipes, a [multilingual NLP
 pipeline](http://ixa2.si.ehu.es/ixa-pipes) developed by the [IXA NLP
 Group](http://ixa.si.ehu.es/Ixa).
@@ -27,10 +27,10 @@ The contents of the module are the following:
 
 Installing the ixa-pipe-wikify requires the following steps:
 
-***If you already have installed in your machine the Java 1.7+ and MAVEN
+*If you already have installed in your machine the Java 1.7+ and MAVEN
 3, please go to [step
 3](#3-download-and-install-statistical-backend---dbpedia-spotlight)
-directly. Otherwise, follow the detailed steps***
+directly. Otherwise, follow the detailed steps*
 
 ### 1. Install JDK 1.7
 
@@ -80,10 +80,10 @@ You should see reference to the MAVEN version you have just installed plus the J
 
 ### 3. Download and install statistical backend - DBpedia Spotlight
 
-***If you already have installed DBpedia Spotlight for [ixa-pipe-ned
+*If you already have installed DBpedia Spotlight for [ixa-pipe-ned
 module](https://github.com/ixa-ehu/ixa-pipe-ned/) in your machine,
 please go to [step 4](#4-download-and-update-the-language-models)
-directly. Otherwise, follow the detailed steps***
+directly. Otherwise, follow the detailed steps*
 
 Download the statistical backend and the models:
 
@@ -99,8 +99,8 @@ This command will install dbpedia-spotlight jar as a local maven repository.
 
 ### 4. Download and update the language models
 
-***If you already use DBpedia Spotlight for ixa-pipe-ned module in your
-machine, you only have to change the parameter as described at the end of this step***
+*If you already use DBpedia Spotlight for ixa-pipe-ned module in your
+machine, you only have to change the parameter as described at the end of this step*
 
 Download the language models:
 
@@ -111,7 +111,7 @@ Untar the language models:
 
     tar xzvf $lang.tar.gz
 
-***$lang variable refers to "en_2+2" for English, and "es" for Spanish***
+*$lang variable refers to "en_2+2" for English, and "es" for Spanish*
 
 Change a parameter in the model in order to do wikification: open the
 $lang/spotter_thresholds.txt file and change the last number to 1.0
@@ -120,11 +120,11 @@ $lang/spotter_thresholds.txt file and change the last number to 1.0
 
 ### 5. Start the DBpedia Spotlight server
 
-***If you already use DBpedia Spotlight for [ixa-pipe-ned
+*If you already use DBpedia Spotlight for [ixa-pipe-ned
 module](https://github.com/ixa-ehu/ixa-pipe-ned/) in your machine and
 the server is running at the moment, you have to stop the server,
 change the model parameter as described in the previous step and
-re-start the server as described here***
+re-start the server as described here*
 
     java -jar dbpedia-spotlight-0.7.jar $lang http://localhost:$port/rest 
 
