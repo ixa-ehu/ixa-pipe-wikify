@@ -6,10 +6,11 @@ is part of IXA pipes, a [multilingual NLP
 pipeline](http://ixa2.si.ehu.es/ixa-pipes) developed by the [IXA NLP
 Group](http://ixa.si.ehu.es/Ixa).
 
-Providing that a DBpedia Spotlight Rest server for a given
-language is running, the *ixa-pipe-wikify* module takes NAF (with 'wf'
-elements) as input and performs Wikification for your language of
-choice.
+Providing that a DBpedia Spotlight Rest server for a given language is
+running, the *ixa-pipe-wikify* module takes a [NAF
+document](http://wordpress.let.vupr.nl/naf/) containing *wf* and
+*term* elements as input and performs Wikification for your language
+of choice.
 
 
 ### Module contents
@@ -85,7 +86,7 @@ module](https://github.com/ixa-ehu/ixa-pipe-ned/) in your machine,
 please go to [step 4](#4-download-and-update-the-language-models)
 directly. Otherwise, follow the detailed steps*
 
-Download the statistical backend and the models:
+Download the statistical backend of DBpedia Spotlight:
 
     wget http://spotlight.sztaki.hu/downloads/dbpedia-spotlight-0.7.jar
 
@@ -100,7 +101,7 @@ This command will install dbpedia-spotlight jar as a local maven repository.
 ### 4. Download and update the language models
 
 *If you already use DBpedia Spotlight for [ixa-pipe-ned
-module](https://github.com/ixa-ehu/ixa-pipe-ned/) module in your
+module](https://github.com/ixa-ehu/ixa-pipe-ned/) in your
 machine, you only have to change the parameter as described at the end
 of this step*
 
@@ -153,10 +154,15 @@ completely portable as long as you have a JVM 1.7 installed.
 
 ## USAGE
 
-The *ixa-pipe-wikify-1.0.jar* requires a NAF document as standard input
-and provides Wikification as standard output. It also requires the
-port number as argument. The port numbers assigned to each language
-are the following:
+The *ixa-pipe-wikify-1.0.jar* requires a NAF document (with *wf* and
+*term* elements) as standard input and outputs NAF through standard
+output. You can get the necessary input for *ixa-pipe-wikify* by
+piping *[ixa-pipe-tok](https://github.com/ixa-ehu/ixa-pipe-tok)* and
+*[ixa-pipe-pos](https://github.com/ixa-ehu/ixa-pipe-pos)* as shown in
+the example below.
+
+It also requires the port number as argument. The port numbers
+assigned to each language are the following:
 
    - en: 2020
    - es: 2030
@@ -164,7 +170,7 @@ are the following:
 Once you have a DBpedia Spotlight Rest server running you can send
 queries to it via the *ixa-pipe-wikify* module as follows:
 
-    cat text.naf | java -jar ixa-pipe-wikify-1.0.jar -p $PORT_NUMBER
+    cat text.txt | ixa-pipe-tok | ixa-pipe-pos | java -jar ixa-pipe-wikify-1.0.jar -p $PORT_NUMBER
 
 For more options running *ixa-pipe-wikify*:
 
