@@ -114,7 +114,7 @@ Untar the language models:
 
     tar xzvf $lang.tar.gz
 
-*$lang variable refers to "en_2+2" for English, and "es" for Spanish*
+*$lang variable refers to "en_2+2" for English and "es" for Spanish*
 
 Change a parameter in the model in order to do wikification: open the
 $lang/spotter_thresholds.txt file and change the last number to 1.0
@@ -131,6 +131,7 @@ re-start the server as described here*
 
     java -jar dbpedia-spotlight-0.7.jar $lang http://localhost:$port/rest 
 
+*$port variable refers to 2020 for English and 2030 for Spanish*
 
 ### 6. Get module source code
 
