@@ -80,8 +80,8 @@ You should see reference to the MAVEN version you have just installed plus the J
 
 ### 3. Download and install statistical backend - DBpedia Spotlight
 
-*If you already have installed DBpedia Spotlight for *[ixa-pipe-ned
-module](https://github.com/ixa-ehu/ixa-pipe-ned/)* in your machine,
+*If you already have installed DBpedia Spotlight for [ixa-pipe-ned
+module](https://github.com/ixa-ehu/ixa-pipe-ned/) in your machine,
 please go to [step 4](#4-download-and-update-the-language-models)
 directly. Otherwise, follow the detailed steps*
 
@@ -99,8 +99,8 @@ This command will install dbpedia-spotlight jar as a local maven repository.
 
 ### 4. Download and update the language models
 
-*If you already use DBpedia Spotlight for *[ixa-pipe-ned
-module](https://github.com/ixa-ehu/ixa-pipe-ned/)* module in your
+*If you already use DBpedia Spotlight for [ixa-pipe-ned
+module](https://github.com/ixa-ehu/ixa-pipe-ned/) module in your
 machine, you only have to change the parameter as described at the end
 of this step*
 
@@ -122,8 +122,8 @@ $lang/spotter_thresholds.txt file and change the last number to 1.0
 
 ### 5. Start the DBpedia Spotlight server
 
-*If you already use DBpedia Spotlight for *[ixa-pipe-ned
-module](https://github.com/ixa-ehu/ixa-pipe-ned/)* in your machine and
+*If you already use DBpedia Spotlight for [ixa-pipe-ned
+module](https://github.com/ixa-ehu/ixa-pipe-ned/) in your machine and
 the server is running at the moment, you have to stop the server,
 change the model parameter as described in the previous step and
 re-start the server as described here*
