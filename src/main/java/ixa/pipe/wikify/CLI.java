@@ -24,8 +24,8 @@ public class CLI {
 
         // create Argument Parser
         ArgumentParser parser = ArgumentParsers.newArgumentParser(
-            "ixa-pipe-wikify-1.0.jar").description(
-            "ixa-pipe-wikify-1.0 is a multilingual Wikification module "
+            "ixa-pipe-wikify-1.1.0.jar").description(
+            "ixa-pipe-wikify-1.1.0 is a multilingual Wikification module "
                 + "developed by IXA NLP Group based on DBpedia Spotlight API.\n");
 
         // specify port
@@ -50,7 +50,7 @@ public class CLI {
         } catch (ArgumentParserException e) {
 	    parser.handleError(e);
 	    System.out
-		.println("Run java -jar target/ixa-pipe-wikify-1.0.jar -help for details");
+		.println("Run java -jar target/ixa-pipe-wikify-1.1.0.jar -help for details");
 	    System.exit(1);
         }
 
@@ -71,7 +71,7 @@ public class CLI {
 	KAFDocument kaf = KAFDocument.createFromStream(stdInReader);
 	
 	String lang = kaf.getLang();
-	KAFDocument.LinguisticProcessor lp = kaf.addLinguisticProcessor("markables", "ixa-pipe-wikify-" + lang, "1.0");
+	KAFDocument.LinguisticProcessor lp = kaf.addLinguisticProcessor("markables", "ixa-pipe-wikify-" + lang, "1.1.0");
 	lp.setBeginTimestamp();
 
 	Annotate annotator = new Annotate();
