@@ -9,8 +9,9 @@ Group](http://ixa.si.ehu.es/Ixa).
 Providing that a DBpedia Spotlight Rest server for a given language is
 running, the *ixa-pipe-wikify* module takes a [NAF
 document](http://wordpress.let.vupr.nl/naf/) containing *wf* and
-*term* elements as input and performs Wikification for your language
-of choice.
+*term* elements as input, performs Wikification for your language
+of choice, and outputs a NAF document with references to DBpedia on *markables*
+element (`<markables source="DBpedia">`)
 
 
 ### Module contents
