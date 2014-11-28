@@ -148,7 +148,7 @@ This step will create a directory called 'target' which contains
 various directories and files. Most importantly, there you will find
 the module executable:
 
-    ixa-pipe-wikify-1.0.jar
+    ixa-pipe-wikify-1.1.0.jar
 
 This executable contains every dependency the module needs, so it is
 completely portable as long as you have a JVM 1.7 installed.
@@ -156,7 +156,7 @@ completely portable as long as you have a JVM 1.7 installed.
 
 ## USAGE
 
-The *ixa-pipe-wikify-1.0.jar* requires a NAF document (with *wf* and
+The *ixa-pipe-wikify* requires a NAF document (with *wf* and
 *term* elements) as standard input and outputs NAF through standard
 output. You can get the necessary input for *ixa-pipe-wikify* by
 piping *[ixa-pipe-tok](https://github.com/ixa-ehu/ixa-pipe-tok)* and
@@ -172,11 +172,11 @@ assigned to each language are the following:
 Once you have a DBpedia Spotlight Rest server running you can send
 queries to it via the *ixa-pipe-wikify* module as follows:
 
-    cat text.txt | ixa-pipe-tok | ixa-pipe-pos | java -jar ixa-pipe-wikify-1.0.jar -p $PORT_NUMBER
+    cat text.txt | ixa-pipe-tok | ixa-pipe-pos | java -jar ixa-pipe-wikify-1.1.0.jar -p $PORT_NUMBER
 
 For more options running *ixa-pipe-wikify*:
 
-    java -jar ixa-pipe-wikify-1.0.jar -h
+    java -jar ixa-pipe-wikify-1.1.0.jar -h
 
 
 #### Contact information
