@@ -8,24 +8,52 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 import java.util.List;
+import java.nio.file.*;
 
 import net.sourceforge.argparse4j.ArgumentParsers;
+import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import net.sourceforge.argparse4j.inf.Namespace;
 
 public class CLI {
 
+    /**
+     * Get dynamically the version of ixa-pipe-nerc by looking at the MANIFEST
+     * file.
+     */
+    private final String version = CLI.class.getPackage().getImplementationVersion();
+    private final String commit = CLI.class.getPackage().getSpecificationVersion();
+
+    private static final Pattern WHITESPACE_PATTERN = Pattern.compile("\\s+");
+    private static final Pattern JARPATH_PATTERN_BEGIN = Pattern.compile("file:");
+    private static final Pattern JARPATH_PATTERN_END = Pattern.compile("[^/]+jar!.+");
+
+    private String crosslinkMappingIndexFile;
+    private final String crosslinkMappingHashName = "esEn";
+
+
+    public CLI(){
+    }
+
+
     public static void main(String[] args) throws Exception {
+	CLI cmdLine = new CLI();
+	cmdLine.parseCLI(args);
+    }
+
+
+    public final void parseCLI(final String[] args) throws Exception{
     	
     	Namespace parsedArguments = null;
 
         // create Argument Parser
         ArgumentParser parser = ArgumentParsers.newArgumentParser(
-            "ixa-pipe-wikify-1.1.0.jar").description(
-            "ixa-pipe-wikify-1.1.0 is a multilingual Wikification module "
+            "ixa-pipe-wikify-1.2.0.jar").description(
+            "ixa-pipe-wikify-1.2.0 is a multilingual Wikification module "
                 + "developed by IXA NLP Group based on DBpedia Spotlight API.\n");
 
         // specify port
@@ -37,9 +65,19 @@ public class CLI {
 		  "It is REQUIRED to choose a port number. Port numbers are assigned " +
 		  "alphabetically by language code: en:2020, es:2030");
 
-        parser.addArgument("-H", "--host").setDefault("http://localhost").help("Choose hostname in which dbpedia-spotlight rest " +
+        parser
+	    .addArgument("-s", "--server")
+	    .required(false)
+	    .setDefault("http://localhost")
+	    .help("Choose hostname in which dbpedia-spotlight rest " +
         		"server is being executed; this value defaults to 'http://localhost'");
         
+	parser
+	    .addArgument("-c", "--cross")
+	    .action(Arguments.storeTrue())
+	    .help("Add the corresponding English crosslingual link too.\n");
+
+
         /*
          * Parse the command line arguments
          */
@@ -50,17 +88,28 @@ public class CLI {
         } catch (ArgumentParserException e) {
 	    parser.handleError(e);
 	    System.out
-		.println("Run java -jar target/ixa-pipe-wikify-1.1.0.jar -help for details");
+		.println("Run java -jar target/ixa-pipe-wikify-1.2.0.jar -help for details");
 	    System.exit(1);
         }
 
-        /*
-         * Load port and host parameters; host defaults to http://localhost
-         */
-
         String port = parsedArguments.getString("port");
-        String host = parsedArguments.getString("host");
+        String host = parsedArguments.getString("server");
+	Boolean cross = parsedArguments.getBoolean("cross");
 
+	if(cross){
+	    String jarpath = this.getClass().getResource("").getPath();
+	    Matcher matcher = JARPATH_PATTERN_BEGIN.matcher(jarpath);
+	    jarpath = matcher.replaceAll("");
+	    matcher = JARPATH_PATTERN_END.matcher(jarpath);
+	    jarpath = matcher.replaceAll("");
+	    crosslinkMappingIndexFile = jarpath + "/resources/wikipedia-db";
+	    if (!Files.isRegularFile(Paths.get(crosslinkMappingIndexFile))) {
+		System.err.println("As you are using -c/--cross  parameter, wikipedia-db file not found. wikipedia-db* files must exist under 'resources/' folder.");
+		throw new Exception();
+	    }
+	}
+
+	    
 	// Input
 	BufferedReader stdInReader = null;
 	// Output
@@ -71,10 +120,11 @@ public class CLI {
 	KAFDocument kaf = KAFDocument.createFromStream(stdInReader);
 	
 	String lang = kaf.getLang();
-	KAFDocument.LinguisticProcessor lp = kaf.addLinguisticProcessor("markables", "ixa-pipe-wikify-" + lang, "1.1.0");
+
+	KAFDocument.LinguisticProcessor lp = kaf.addLinguisticProcessor("markables", "ixa-pipe-wikify-" + lang, version + "-" + commit);
 	lp.setBeginTimestamp();
 
-	Annotate annotator = new Annotate();
+	Annotate annotator = new Annotate(cross, crosslinkMappingIndexFile, crosslinkMappingHashName, lang);
 	try{
 	    List<WF> wordForms = kaf.getWFs();
 	    List<Term> terms = kaf.getTerms();

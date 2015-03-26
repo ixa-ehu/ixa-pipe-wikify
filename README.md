@@ -148,7 +148,7 @@ This step will create a directory called 'target' which contains
 various directories and files. Most importantly, there you will find
 the module executable:
 
-    ixa-pipe-wikify-1.1.0.jar
+    ixa-pipe-wikify-1.2.0.jar
 
 This executable contains every dependency the module needs, so it is
 completely portable as long as you have a JVM 1.7 installed.
@@ -173,6 +173,25 @@ Once you have a DBpedia Spotlight Rest server running you can send
 queries to it via the *ixa-pipe-wikify* module as follows:
 
     cat text.txt | ixa-pipe-tok | ixa-pipe-pos | java -jar ixa-pipe-wikify-1.1.0.jar -p $PORT_NUMBER
+
+
+When the language is Spanish, the module offers an
+additional feature. It is possible to set the corresponding English
+entry also. To execute this option, first download the required files
+and place them where the executable jar is located, under 'resources'
+folder, following these steps:
+
+    cd target
+    mkdir resources
+    cd resources
+    wget http://ixa2.si.ehu.es/ixa-pipes/models/wikipedia-db.tar.gz
+    tar xzvf wikipedia-db.tar.gz
+    
+Execute the module as follows:
+
+    cat text.txt | ixa-pipe-tok | ixa-pipe-pos | java -jar ixa-pipe-wikify-1.1.0.jar -p $PORT_NUMBER -c
+
+
 
 For more options running *ixa-pipe-wikify*:
 

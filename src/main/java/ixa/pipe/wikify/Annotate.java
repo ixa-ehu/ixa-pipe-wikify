@@ -23,10 +23,20 @@ public class Annotate {
 
 
     DBpediaSpotlightClient c;
+    boolean cross = false;
+    DictManager crosslinkMappingIndex;
+    String crosslinkMappingHashName;
+    String language;
    
 
-    public Annotate(){
+    public Annotate(boolean cross, String crosslinkMappingIndexFile, String crosslinkMappingHashName, String language){
 	c = new DBpediaSpotlightClient ();
+	this.language = language;
+	if((!language.equals("en")) && cross){
+	    crosslinkMappingIndex = new DictManager(crosslinkMappingIndexFile, crosslinkMappingHashName);
+	    this.cross = cross;
+	    this.crosslinkMappingHashName = crosslinkMappingHashName;
+	}
     }
     
 
@@ -50,7 +60,7 @@ public class Annotate {
 	// TODO: DBpedia-spotlight buffer max size
 
 	Document response = annotate(text, host, port);
-	XMLSpot2KAF(kaf,response);
+	XMLSpot2KAF(kaf, response);
 	
     }
     
@@ -73,8 +83,10 @@ public class Annotate {
 	    
 	    if (nNode.getNodeType() == Node.ELEMENT_NODE) {	
 		Element eElement = (Element) nNode;
-		ExternalRef externalRef = kaf.createExternalRef(resourceExternalRef,eElement.getAttribute("URI"));
-		externalRef.setConfidence(Float.valueOf(eElement.getAttribute("similarityScore")));
+		String reference = eElement.getAttribute("URI");
+		Float confidence = Float.valueOf(eElement.getAttribute("similarityScore"));
+		ExternalRef externalRef = kaf.createExternalRef(resourceExternalRef,reference);
+		externalRef.setConfidence(confidence);
 		List<Term> spotTerms = getSpotTermsGivenOffset(kaf, new Integer(eElement.getAttribute("offset")), eElement.getAttribute("surfaceForm"));
 		boolean noun = false;
 		String markableLemma = "";
@@ -98,6 +110,18 @@ public class Annotate {
 		    Mark markable = kaf.newMark(resourceMarkable, kaf.newWFSpan(spotWFs));
 		    markable.setLemma(markableLemma);
 		    markable.addExternalRef(externalRef);
+
+		    if(cross){
+			String mappingResource = "wikipedia-db-" + crosslinkMappingHashName;
+			String mappingRef = getMappingRef(reference);
+			if(mappingRef != null){
+			    ExternalRef enRef = kaf.newExternalRef(mappingResource, mappingRef);
+			    enRef.setConfidence(confidence);
+			    enRef.setSource(language);
+			    enRef.setReftype("en");
+			    markable.addExternalRef(enRef);
+			}
+		    }			
 		}
 	    }
 	}
@@ -119,6 +143,19 @@ public class Annotate {
 	    }
 	}
 	return spotTerms;
+    }
+
+
+    private String getMappingRef(String ref){
+	String[] info = ref.split("/");
+	int pos = info.length - 1;
+	String entry = info[pos];
+	String url = "http://dbpedia.org/resource/";
+	String value = crosslinkMappingIndex.getValue(entry);
+	if (value != null){
+	    return url + value;
+	}
+	return null;
     }
       
 }
