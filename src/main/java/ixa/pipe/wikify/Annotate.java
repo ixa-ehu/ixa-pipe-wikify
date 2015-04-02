@@ -87,6 +87,8 @@ public class Annotate {
 		Float confidence = Float.valueOf(eElement.getAttribute("similarityScore"));
 		ExternalRef externalRef = kaf.createExternalRef(resourceExternalRef,reference);
 		externalRef.setConfidence(confidence);
+		externalRef.setSource(language);
+		externalRef.setReftype(language);
 		List<Term> spotTerms = getSpotTermsGivenOffset(kaf, new Integer(eElement.getAttribute("offset")), eElement.getAttribute("surfaceForm"));
 		boolean noun = false;
 		String markableLemma = "";
