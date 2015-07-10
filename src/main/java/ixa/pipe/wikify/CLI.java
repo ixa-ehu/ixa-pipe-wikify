@@ -1,3 +1,24 @@
+/*
+ * Copyright (C) 2015 IXA Taldea, University of the Basque Country UPV/EHU
+
+   This file is part of ixa-pipe-wikify.
+
+   ixa-pipe-wikify is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   ixa-pipe-wikify is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with ixa-pipe-wikify.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
+
+
 package ixa.pipe.wikify;
 
 import ixa.kaflib.KAFDocument;
@@ -22,7 +43,7 @@ import net.sourceforge.argparse4j.inf.Namespace;
 public class CLI {
 
     /**
-     * Get dynamically the version of ixa-pipe-nerc by looking at the MANIFEST
+     * Get dynamically the version of ixa-pipe-wikify by looking at the MANIFEST
      * file.
      */
     private final String version = CLI.class.getPackage().getImplementationVersion();
@@ -52,8 +73,8 @@ public class CLI {
 
         // create Argument Parser
         ArgumentParser parser = ArgumentParsers.newArgumentParser(
-            "ixa-pipe-wikify-1.2.0.jar").description(
-            "ixa-pipe-wikify-1.2.0 is a multilingual Wikification module "
+            "ixa-pipe-wikify-1.2.1.jar").description(
+            "ixa-pipe-wikify-1.2.1 is a multilingual Wikification module "
                 + "developed by IXA NLP Group based on DBpedia Spotlight API.\n");
 
         // specify port
@@ -88,7 +109,7 @@ public class CLI {
         } catch (ArgumentParserException e) {
 	    parser.handleError(e);
 	    System.out
-		.println("Run java -jar target/ixa-pipe-wikify-1.2.0.jar -help for details");
+		.println("Run java -jar target/ixa-pipe-wikify-1.2.1.jar -help for details");
 	    System.exit(1);
         }
 
