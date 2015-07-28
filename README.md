@@ -110,6 +110,7 @@ Download the required language model:
 
    - German model: 
 
+
     wget http://spotlight.sztaki.hu/downloads/de.tar.gz
 
    - English model: 
@@ -120,7 +121,7 @@ Download the required language model:
 
     wget http://spotlight.sztaki.hu/downloads/es.tar.gz
 
-   - Frenc model:
+   - French model:
 
     wget http://spotlight.sztaki.hu/downloads/fr.tar.gz
 
@@ -137,7 +138,7 @@ Untar the language model:
 
     tar xzvf $lang.tar.gz
 
-$lang variable refers to "de" for German, "en_2+2" for English, "es"
+*$lang* variable refers to "de" for German, "en_2+2" for English, "es"
  for Spanish, "fr" for French, "it" for Italian and "nl" for Dutch
 
 Change a parameter in the model in order to do wikification: open the
@@ -155,16 +156,16 @@ re-start the server as described here*
 
     java -jar dbpedia-spotlight-0.7.jar $lang http://localhost:$port/rest 
 
-See previous section for $lang variable description.
+See previous section for *$lang* variable description.
 
-$port variable takes one of the following values depending on the language:
+*$port* variable takes one of the following values depending on the language:
    - de: 2010
    - en: 2020
    - es: 2030
    - fr: 2040
    - it: 2050
    - nl: 2060
-*
+
 
 ### 6. Get module source code
 
@@ -220,8 +221,8 @@ entry also. To use this option, execute the module as follows:
 
 These are the extra parameters to be used:
 
-   - -i: specify the path to the 'database' created by [MapDB](http://www.mapdb.org/) to find the corresponding English crosslingual link
-   - -n: specify the name of the HashMap in the index to be used
+   - **-i**: specify the path to the 'database' created by [MapDB](http://www.mapdb.org/) to find the corresponding English crosslingual link
+   - **-n**: specify the name of the HashMap in the index to be used
 
 So far, you can download and untar the following package for Spanish
 crosslingual links:
