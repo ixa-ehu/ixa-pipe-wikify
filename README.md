@@ -109,21 +109,27 @@ of this step*
 Download the required language model:
 
    - German model: 
+
     wget http://spotlight.sztaki.hu/downloads/de.tar.gz
 
    - English model: 
+
     wget http://spotlight.sztaki.hu/downloads/en_2+2.tar.gz
 
    - Spanish model:
+
     wget http://spotlight.sztaki.hu/downloads/es.tar.gz
 
    - Frenc model:
+
     wget http://spotlight.sztaki.hu/downloads/fr.tar.gz
 
    - Italian model:
+
     wget http://spotlight.sztaki.hu/downloads/it.tar.gz
 
    - Dutch model:
+
     wget http://spotlight.sztaki.hu/downloads/nl.tar.gz
 
 
@@ -131,8 +137,8 @@ Untar the language model:
 
     tar xzvf $lang.tar.gz
 
-*$lang variable refers to "de" for German, "en_2+2" for English, "es"
- for Spanish, "fr" for French, "it" for Italian and "nl" for Duch*
+$lang variable refers to "de" for German, "en_2+2" for English, "es"
+ for Spanish, "fr" for French, "it" for Italian and "nl" for Dutch
 
 Change a parameter in the model in order to do wikification: open the
 $lang/spotter_thresholds.txt file and change the last number to 1.0
@@ -149,9 +155,9 @@ re-start the server as described here*
 
     java -jar dbpedia-spotlight-0.7.jar $lang http://localhost:$port/rest 
 
-*See previous section for $lang variable description*
+See previous section for $lang variable description.
 
-*$port variable takes one of the following values depending on the language:
+$port variable takes one of the following values depending on the language:
    - de: 2010
    - en: 2020
    - es: 2030
@@ -230,7 +236,7 @@ And then execute as follows (for Spanish):
 
 For more options running *ixa-pipe-wikify*:
 
-    java -jar ixa-pipe-wikify-1.1.0.jar -h
+    java -jar ixa-pipe-wikify-1.3.0.jar -h
 
 
 #### Contact information
