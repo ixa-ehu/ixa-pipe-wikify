@@ -73,19 +73,18 @@ public class CLI {
 
         // create Argument Parser
         ArgumentParser parser = ArgumentParsers.newArgumentParser(
-            "ixa-pipe-wikify-1.2.1.jar").description(
-            "ixa-pipe-wikify-1.2.1 is a multilingual Wikification module "
+            "ixa-pipe-wikify-1.3.0.jar").description(
+            "ixa-pipe-wikify-1.3.0 is a multilingual Wikification module "
                 + "developed by IXA NLP Group based on DBpedia Spotlight API.\n");
 
         // specify port
         parser
             .addArgument("-p", "--port")
-            .choices("2020","2030")
+            .choices("2010","2020","2030","2040","2050","2060")
             .required(true)
             .help(
 		  "It is REQUIRED to choose a port number. Port numbers are assigned " +
-		  "alphabetically by language code: en:2020, es:2030");
-
+		  "alphabetically by language code: de: 2010, en: 2020, es: 2030, fr: 2040, it: 2050, nl: 2060");
         parser
 	    .addArgument("-s", "--server")
 	    .required(false)
@@ -94,9 +93,13 @@ public class CLI {
         		"server is being executed; this value defaults to 'http://localhost'");
         
 	parser
-	    .addArgument("-c", "--cross")
-	    .action(Arguments.storeTrue())
-	    .help("Add the corresponding English crosslingual link too.\n");
+	    .addArgument("-i", "--index")
+	    .setDefault("none")
+	    .help("Path to the 'database' created by MapDB to find the corresponding English crosslingual link");
+	parser
+	    .addArgument("-n", "--name")
+	    .setDefault("none")
+	    .help("Name of the HashMap in the index to be used; i.e. 'esEn' for English crosslingual links for Spanish\n");
 
 
         /*
@@ -109,14 +112,15 @@ public class CLI {
         } catch (ArgumentParserException e) {
 	    parser.handleError(e);
 	    System.out
-		.println("Run java -jar target/ixa-pipe-wikify-1.2.1.jar -help for details");
+		.println("Run java -jar target/ixa-pipe-wikify-1.3.0.jar -help for details");
 	    System.exit(1);
         }
 
         String port = parsedArguments.getString("port");
         String host = parsedArguments.getString("server");
-	Boolean cross = parsedArguments.getBoolean("cross");
-
+	String index = parsedArguments.getString("index");
+	String hashName = parsedArguments.getString("name");
+	/*
 	if(cross){
 	    String jarpath = this.getClass().getResource("").getPath();
 	    Matcher matcher = JARPATH_PATTERN_BEGIN.matcher(jarpath);
@@ -129,7 +133,7 @@ public class CLI {
 		throw new Exception();
 	    }
 	}
-
+	*/
 	    
 	// Input
 	BufferedReader stdInReader = null;
@@ -145,7 +149,7 @@ public class CLI {
 	KAFDocument.LinguisticProcessor lp = kaf.addLinguisticProcessor("markables", "ixa-pipe-wikify-" + lang, version + "-" + commit);
 	lp.setBeginTimestamp();
 
-	Annotate annotator = new Annotate(cross, crosslinkMappingIndexFile, crosslinkMappingHashName, lang);
+	Annotate annotator = new Annotate(index, hashName, lang);
 	try{
 	    List<WF> wordForms = kaf.getWFs();
 	    List<Term> terms = kaf.getTerms();

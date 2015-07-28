@@ -45,17 +45,19 @@ public class Annotate {
     DBpediaSpotlightClient c;
     boolean cross = false;
     DictManager crosslinkMappingIndex;
+    String crosslinkIndexFile;
     String crosslinkMappingHashName;
     String language;
    
 
-    public Annotate(boolean cross, String crosslinkMappingIndexFile, String crosslinkMappingHashName, String language){
+    public Annotate(String crosslinkMappingIndexFile, String crosslinkMappingHashName, String language){
 	c = new DBpediaSpotlightClient ();
 	this.language = language;
-	if((!language.equals("en")) && cross){
+	if(!crosslinkMappingIndexFile.equals("none")){
 	    crosslinkMappingIndex = new DictManager(crosslinkMappingIndexFile, crosslinkMappingHashName);
-	    this.cross = cross;
+	    this.crosslinkIndexFile = crosslinkMappingIndexFile;
 	    this.crosslinkMappingHashName = crosslinkMappingHashName;
+	    cross = true;
 	}
     }
     
@@ -92,7 +94,7 @@ public class Annotate {
     
     
     private void XMLSpot2KAF(KAFDocument kaf, Document spotDoc){
-	String resourceExternalRef = "spotlight";
+	String resourceExternalRef = "spotlight_v0.7";
 	String resourceMarkable = "DBpedia";
 	
 	spotDoc.getDocumentElement().normalize();
@@ -141,7 +143,7 @@ public class Annotate {
 			    enRef.setConfidence(confidence);
 			    enRef.setSource(language);
 			    enRef.setReftype("en");
-			    markable.addExternalRef(enRef);
+			    externalRef.addExternalRef(enRef);
 			}
 		    }			
 		}

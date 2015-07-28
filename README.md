@@ -106,16 +106,33 @@ module](https://github.com/ixa-ehu/ixa-pipe-ned/) in your
 machine, you only have to change the parameter as described at the end
 of this step*
 
-Download the language models:
+Download the required language model:
 
-    wget http://spotlight.sztaki.hu/downloads/en_2+2.tar.gz  (English model)
-    wget http://spotlight.sztaki.hu/downloads/es.tar.gz   (Spanish model)
+   - German model: 
+    wget http://spotlight.sztaki.hu/downloads/de.tar.gz
 
-Untar the language models:
+   - English model: 
+    wget http://spotlight.sztaki.hu/downloads/en_2+2.tar.gz
+
+   - Spanish model:
+    wget http://spotlight.sztaki.hu/downloads/es.tar.gz
+
+   - Frenc model:
+    wget http://spotlight.sztaki.hu/downloads/fr.tar.gz
+
+   - Italian model:
+    wget http://spotlight.sztaki.hu/downloads/it.tar.gz
+
+   - Dutch model:
+    wget http://spotlight.sztaki.hu/downloads/nl.tar.gz
+
+
+Untar the language model:
 
     tar xzvf $lang.tar.gz
 
-*$lang variable refers to "en_2+2" for English and "es" for Spanish*
+*$lang variable refers to "de" for German, "en_2+2" for English, "es"
+ for Spanish, "fr" for French, "it" for Italian and "nl" for Duch*
 
 Change a parameter in the model in order to do wikification: open the
 $lang/spotter_thresholds.txt file and change the last number to 1.0
@@ -132,7 +149,16 @@ re-start the server as described here*
 
     java -jar dbpedia-spotlight-0.7.jar $lang http://localhost:$port/rest 
 
-*$port variable refers to 2020 for English and 2030 for Spanish*
+*See previous section for $lang variable description*
+
+*$port variable takes one of the following values depending on the language:
+   - de: 2010
+   - en: 2020
+   - es: 2030
+   - fr: 2040
+   - it: 2050
+   - nl: 2060
+*
 
 ### 6. Get module source code
 
@@ -148,7 +174,7 @@ This step will create a directory called 'target' which contains
 various directories and files. Most importantly, there you will find
 the module executable:
 
-    ixa-pipe-wikify-1.2.0.jar
+    ixa-pipe-wikify-1.3.0.jar
 
 This executable contains every dependency the module needs, so it is
 completely portable as long as you have a JVM 1.7 installed.
@@ -166,31 +192,40 @@ the example below.
 It also requires the port number as argument. The port numbers
 assigned to each language are the following:
 
+   - de: 2010
    - en: 2020
    - es: 2030
+   - fr: 2040
+   - it: 2050
+   - nl: 2060
+
 
 Once you have a DBpedia Spotlight Rest server running you can send
 queries to it via the *ixa-pipe-wikify* module as follows:
 
-    cat text.txt | ixa-pipe-tok | ixa-pipe-pos | java -jar ixa-pipe-wikify-1.1.0.jar -p $PORT_NUMBER
+    cat text.txt | ixa-pipe-tok | ixa-pipe-pos | java -jar ixa-pipe-wikify-1.3.0.jar -p $PORT_NUMBER
 
 
-When the language is Spanish, the module offers an
+When the language is other than English, the module offers an
 additional feature. It is possible to set the corresponding English
-entry also. To execute this option, first download the required files
-and place them where the executable jar is located, under 'resources'
-folder, following these steps:
+entry also. To use this option, execute the module as follows:
 
-    cd target
-    mkdir resources
-    cd resources
+    cat text.txt | ixa-pipe-tok | ixa-pipe-pos | java -jar ixa-pipe-wikify-1.1.0.jar -p $PORT_NUMBER -i $INDEX -n $HASH_NAME
+
+These are the extra parameters to be used:
+
+   - -i: specify the path to the 'database' created by [MapDB](http://www.mapdb.org/) to find the corresponding English crosslingual link
+   - -n: specify the name of the HashMap in the index to be used
+
+So far, you can download and untar the following package for Spanish
+crosslingual links:
+
     wget http://ixa2.si.ehu.es/ixa-pipes/models/wikipedia-db.tar.gz
     tar xzvf wikipedia-db.tar.gz
-    
-Execute the module as follows:
 
-    cat text.txt | ixa-pipe-tok | ixa-pipe-pos | java -jar ixa-pipe-wikify-1.1.0.jar -p $PORT_NUMBER -c
+And then execute as follows (for Spanish): 
 
+    cat text.txt | ixa-pipe-tok | ixa-pipe-pos | java -jar ixa-pipe-wikify-1.1.0.jar -p 2030 -i wikipedia-db -n esEn
 
 
 For more options running *ixa-pipe-wikify*:
@@ -200,8 +235,8 @@ For more options running *ixa-pipe-wikify*:
 
 #### Contact information
 
-    Rodrigo Agerri and Arantxa Otegi
-    {rodrigo.agerri,arantza.otegi}@ehu.es
+    Arantxa Otegi
+    arantza.otegi@ehu.es
     IXA NLP Group
     University of the Basque Country (UPV/EHU)
     E-20018 Donostia-San Sebastián
