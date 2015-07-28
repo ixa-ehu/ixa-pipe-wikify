@@ -113,6 +113,7 @@ Download the required language model:
 
     wget http://spotlight.sztaki.hu/downloads/de.tar.gz
 
+
    - English model: 
 
     wget http://spotlight.sztaki.hu/downloads/en_2+2.tar.gz
