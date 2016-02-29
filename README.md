@@ -152,7 +152,7 @@ the server is running at the moment, you have to stop the server,
 change the model parameter as described in the previous step and
 re-start the server as described here*
 
-    java -jar dbpedia-spotlight-0.7.jar $lang http://localhost:$port/rest 
+    java -jar dbpedia-spotlight-latest.jar $lang http://localhost:$port/rest 
 
 See previous section for *$lang* variable description.
 
