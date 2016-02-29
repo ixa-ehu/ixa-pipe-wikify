@@ -89,12 +89,11 @@ directly. Otherwise, follow the detailed steps*
 
 Download the statistical backend of DBpedia Spotlight:
 
-    wget http://spotlight.sztaki.hu/downloads/dbpedia-spotlight-0.7.jar
-
+    wget http://spotlight.sztaki.hu/downloads/dbpedia-spotlight-latest.jar
  
-Go to the directory the dbpedia-spotlight-0.7.jar is located and execute:
+Go to the directory the dbpedia-spotlight-latest.jar is located and execute:
 
-    mvn install:install-file -Dfile=dbpedia-spotlight-0.7.jar -DgroupId=ixa -DartifactId=dbpedia-spotlight -Dversion=0.7 -Dpackaging=jar -DgeneratePom=true
+    mvn install:install-file -Dfile=dbpedia-spotlight-latest.jar -DgroupId=ixa -DartifactId=dbpedia-spotlight -Dversion=0.7 -Dpackaging=jar -DgeneratePom=true
 
 This command will install dbpedia-spotlight jar as a local maven repository.
 
@@ -110,36 +109,34 @@ Download the required language model:
 
    - German model: 
 
-
-    wget http://spotlight.sztaki.hu/downloads/de.tar.gz
-
+    wget http://spotlight.sztaki.hu/downloads/latest_models/de.tar.gz
 
    - English model: 
 
-    wget http://spotlight.sztaki.hu/downloads/en_2+2.tar.gz
+    wget http://spotlight.sztaki.hu/downloads/latest_models/en.tar.gz
 
    - Spanish model:
 
-    wget http://spotlight.sztaki.hu/downloads/es.tar.gz
+    wget http://spotlight.sztaki.hu/downloads/latest_models/es.tar.gz
 
    - French model:
 
-    wget http://spotlight.sztaki.hu/downloads/fr.tar.gz
+    wget http://spotlight.sztaki.hu/downloads/latest_models/fr.tar.gz
 
    - Italian model:
 
-    wget http://spotlight.sztaki.hu/downloads/it.tar.gz
+    wget http://spotlight.sztaki.hu/downloads/latest_models/it.tar.gz
 
    - Dutch model:
 
-    wget http://spotlight.sztaki.hu/downloads/nl.tar.gz
+    wget http://spotlight.sztaki.hu/downloads/latest_models/nl.tar.gz
 
 
 Untar the language model:
 
     tar xzvf $lang.tar.gz
 
-*$lang* variable refers to "de" for German, "en_2+2" for English, "es"
+*$lang* variable refers to "de" for German, "en" for English, "es"
  for Spanish, "fr" for French, "it" for Italian and "nl" for Dutch
 
 Change a parameter in the model in order to do wikification: open the
