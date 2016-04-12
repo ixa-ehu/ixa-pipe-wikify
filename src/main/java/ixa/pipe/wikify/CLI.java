@@ -22,23 +22,19 @@
 package ixa.pipe.wikify;
 
 import ixa.kaflib.KAFDocument;
-import ixa.kaflib.WF;
 import ixa.kaflib.Term;
+import ixa.kaflib.WF;
+import net.sourceforge.argparse4j.ArgumentParsers;
+import net.sourceforge.argparse4j.inf.ArgumentParser;
+import net.sourceforge.argparse4j.inf.ArgumentParserException;
+import net.sourceforge.argparse4j.inf.Namespace;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
 import java.util.List;
-import java.nio.file.*;
-
-import net.sourceforge.argparse4j.ArgumentParsers;
-import net.sourceforge.argparse4j.impl.Arguments;
-import net.sourceforge.argparse4j.inf.ArgumentParser;
-import net.sourceforge.argparse4j.inf.ArgumentParserException;
-import net.sourceforge.argparse4j.inf.Namespace;
+import java.util.regex.Pattern;
 
 public class CLI {
 
@@ -80,7 +76,7 @@ public class CLI {
         // specify port
         parser
             .addArgument("-p", "--port")
-            .choices("2010","2020","2030","2040","2050","2060")
+            //.choices("2010","2020","2030","2040","2050","2060")
             .required(true)
             .help(
 		  "It is REQUIRED to choose a port number. Port numbers are assigned " +
@@ -101,6 +97,23 @@ public class CLI {
 	    .setDefault("none")
 	    .help("Name of the HashMap in the index to be used; i.e. 'esEn' for English crosslingual links for Spanish\n");
 
+	parser
+		.addArgument("-c", "--confidence")
+		.type(Double.class)
+		.setDefault(0.0)
+		.help("Confidence level for spotlight service [0-1].\n");
+
+	parser
+		.addArgument("-su", "--support")
+		.type(Integer.class)
+		.setDefault(0)
+		.help("Indicates how prominent is this entity, i.e. number of inlinks in Wikipedia.\n");
+
+	parser
+		.addArgument("-co", "--coreference")
+		.type(Boolean.class)
+		.setDefault(false)
+		.help("Coreference resolution (true/false).\n");
 
         /*
          * Parse the command line arguments
@@ -120,6 +133,10 @@ public class CLI {
         String host = parsedArguments.getString("server");
 	String index = parsedArguments.getString("index");
 	String hashName = parsedArguments.getString("name");
+		double confidence = parsedArguments.getDouble("confidence");
+		int support = parsedArguments.getInt("support");
+		boolean coreference = parsedArguments.getBoolean("coreference");
+
 	/*
 	if(cross){
 	    String jarpath = this.getClass().getResource("").getPath();
@@ -154,7 +171,7 @@ public class CLI {
 	    List<WF> wordForms = kaf.getWFs();
 	    List<Term> terms = kaf.getTerms();
 	    if (!wordForms.isEmpty() && !terms.isEmpty()){
-		annotator.wikificationToKAF(kaf, host, port);
+		annotator.wikificationToKAF(kaf, host, port, confidence, support, coreference);
 	    }
 	}
 	catch (Exception e){

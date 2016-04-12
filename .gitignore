@@ -14,3 +14,6 @@ octave-core
 *.pydevproject
 *.settings
 *.checkstyle
+*.idea
+*.iml
+dependency-reduced-pom.xml
