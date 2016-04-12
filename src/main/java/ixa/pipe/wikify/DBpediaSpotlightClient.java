@@ -21,28 +21,20 @@
 package ixa.pipe.wikify;
 
 import org.apache.commons.httpclient.*;
-import org.apache.commons.httpclient.params.HttpMethodParams;
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.StringRequestEntity;
-
-
+import org.apache.commons.httpclient.params.HttpMethodParams;
+import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
 import org.dbpedia.spotlight.exceptions.AnnotationException;
 import org.dbpedia.spotlight.model.Text;
-
-import org.apache.commons.io.IOUtils;
-
-import java.io.*;
-import java.net.URLEncoder;
-
 import org.w3c.dom.Document;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.DocumentBuilder;
-import java.io.StringReader;
 import org.xml.sax.InputSource;
 
-import org.apache.log4j.Logger;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
 
 /**
  * Simple web service-based annotation client for DBpedia Spotlight.
@@ -51,11 +43,11 @@ import org.apache.log4j.Logger;
  */
 
 public class DBpediaSpotlightClient {
-    public Logger LOG = Logger.getLogger(this.getClass());
+    public static final double CONFIDENCE = 0.0;
+    public static final int SUPPORT = 0;
+    public static final boolean COREFERENCE = false;
 
-    private static final double CONFIDENCE = 0.0;
-    private static final int SUPPORT = 0;
-    private static final boolean COREFERENCE = false;
+    public Logger LOG = Logger.getLogger(this.getClass());
 
     // Create an instance of HttpClient.
     private static HttpClient client = new HttpClient();
@@ -98,31 +90,32 @@ public class DBpediaSpotlightClient {
 
     }
 
-
-
     public Document extract(Text text, String host, String port) throws AnnotationException{
+        return extract(text, host, port, CONFIDENCE, SUPPORT, COREFERENCE);
+    }
 
+    public Document extract(Text text, String host, String port, double confidence, int support, boolean coreference) throws AnnotationException{
         LOG.info("Querying API.");
-	String spotlightResponse = "";
-	Document doc = null;
-	try {
-	    String url = host + ":" + port +"/rest/annotate";
-	    PostMethod method = new PostMethod(url);
-	    method.setRequestHeader("Content-Type","application/x-www-form-urlencoded;charset=utf-8");
-	    NameValuePair[] params = {new NameValuePair("text",text.text()), new NameValuePair("confidence",Double.toString(CONFIDENCE)), new NameValuePair("support",Integer.toString(SUPPORT)), new NameValuePair("coreferenceResolution",Boolean.toString(COREFERENCE))};
-	    method.setRequestBody(params);
-	    method.setRequestHeader(new Header("Accept", "text/xml"));
-	    spotlightResponse = request(method);
-	    doc = loadXMLFromString(spotlightResponse);
-	}
-	catch (javax.xml.parsers.ParserConfigurationException ex) {
-	}
-	catch (org.xml.sax.SAXException ex) {
-	}
-	catch (java.io.IOException ex) {
-	}
-	
-	return doc;
+        String spotlightResponse = "";
+        Document doc = null;
+        try {
+            String url = host + ":" + port +"/rest/annotate";
+            PostMethod method = new PostMethod(url);
+            method.setRequestHeader("Content-Type","application/x-www-form-urlencoded;charset=utf-8");
+            NameValuePair[] params = {new NameValuePair("text",text.text()), new NameValuePair("confidence",Double.toString(confidence)), new NameValuePair("support",Integer.toString(support)), new NameValuePair("coreferenceResolution",Boolean.toString(coreference))};
+            method.setRequestBody(params);
+            method.setRequestHeader(new Header("Accept", "text/xml"));
+            spotlightResponse = request(method);
+            doc = loadXMLFromString(spotlightResponse);
+        }
+        catch (javax.xml.parsers.ParserConfigurationException ex) {
+        }
+        catch (org.xml.sax.SAXException ex) {
+        }
+        catch (java.io.IOException ex) {
+        }
+
+        return doc;
     }
     
     public static Document loadXMLFromString(String xml)  throws org.xml.sax.SAXException, java.io.IOException, javax.xml.parsers.ParserConfigurationException

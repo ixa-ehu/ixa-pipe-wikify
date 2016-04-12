@@ -4,7 +4,7 @@
   <groupId>ixa</groupId>
   <artifactId>ixa-pipe-wikify</artifactId>
   <packaging>jar</packaging>
-  <version>1.3.0</version>
+  <version>1.3.1</version>
   <name>ixa-pipe-wikify</name>
   <description>ixa-pipe-wikify is part of IXA-pipeline and performs
     Wikification based on DBpedia Spotlight.  In principle the
@@ -27,6 +27,11 @@
       <id>ragerri</id>
       <name>Rodrigo Agerri</name>
       <email>rodrigo.agerri@ehu.es</email>
+    </developer>
+    <developer>
+      <id>ivarea</id>
+      <name>Israel Varea</name>
+      <email>ivarea@futurespace.es</email>
     </developer>
   </developers>
   <properties>
@@ -81,7 +86,7 @@
      <artifactId>dbpedia-spotlight</artifactId>
      <version>0.7</version>
    </dependency>
-   
+
   </dependencies>
   
   <build>
@@ -105,7 +110,7 @@
 	<artifactId>maven-compiler-plugin</artifactId>
 	<version>2.3.2</version>
 	<configuration>
-	  <compilerargument>-verbose</compilerargument>
+	  <!--<compilerargument>-verbose</compilerargument>-->
 	  <source>1.7</source>
 	  <target>1.7</target>
 	</configuration>
@@ -142,4 +147,5 @@
       </plugin> 
     </plugins>
   </build>
+
 </project>
