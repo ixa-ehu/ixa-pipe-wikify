@@ -2,19 +2,19 @@
  * Copyright (C) 2015 IXA Taldea, University of the Basque Country UPV/EHU
 
    This file is part of ixa-pipe-wikify.
-                                                                    
+
    ixa-pipe-wikify is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by                                                                          
-   the Free Software Foundation, either version 3 of the License, or                                                                             
-   (at your option) any later version.                                                                                                          
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
 
    ixa-pipe-wikify is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.                                                                                                 
+   GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License 
-   along with ixa-pipe-wikify.  If not, see <http://www.gnu.org/licenses/>.  
+   You should have received a copy of the GNU General Public License
+   along with ixa-pipe-wikify.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
@@ -80,8 +80,8 @@ public class DBpediaSpotlightClient {
             // Read the response body.
             // // Deal with the response.
             // // Use caution: ensure correct character encoding and is not binary data
-	    InputStream responseBody =  method.getResponseBodyAsStream();
-	    response = IOUtils.toString(responseBody, "UTF-8");
+        InputStream responseBody =  method.getResponseBodyAsStream();
+        response = IOUtils.toString(responseBody, "UTF-8");
 
         } catch (HttpException e) {
             LOG.error("Fatal protocol violation: " + e.getMessage());
@@ -103,28 +103,28 @@ public class DBpediaSpotlightClient {
     public Document extract(Text text, String host, String port) throws AnnotationException{
 
         LOG.info("Querying API.");
-	String spotlightResponse = "";
-	Document doc = null;
-	try {
-	    String url = host + ":" + port +"/rest/annotate";
-	    PostMethod method = new PostMethod(url);
-	    method.setRequestHeader("Content-Type","application/x-www-form-urlencoded;charset=utf-8");
-	    NameValuePair[] params = {new NameValuePair("text",text.text()), new NameValuePair("confidence",Double.toString(CONFIDENCE)), new NameValuePair("support",Integer.toString(SUPPORT)), new NameValuePair("coreferenceResolution",Boolean.toString(COREFERENCE))};
-	    method.setRequestBody(params);
-	    method.setRequestHeader(new Header("Accept", "text/xml"));
-	    spotlightResponse = request(method);
-	    doc = loadXMLFromString(spotlightResponse);
-	}
-	catch (javax.xml.parsers.ParserConfigurationException ex) {
-	}
-	catch (org.xml.sax.SAXException ex) {
-	}
-	catch (java.io.IOException ex) {
-	}
-	
-	return doc;
+    String spotlightResponse = "";
+    Document doc = null;
+    try {
+        String url = host + ":" + port +"/rest/annotate";
+        PostMethod method = new PostMethod(url);
+        method.setRequestHeader("Content-Type","application/x-www-form-urlencoded;charset=utf-8");
+        NameValuePair[] params = {new NameValuePair("text",text.text()), new NameValuePair("confidence",Double.toString(CONFIDENCE)), new NameValuePair("support",Integer.toString(SUPPORT)), new NameValuePair("coreferenceResolution",Boolean.toString(COREFERENCE))};
+        method.setRequestBody(params);
+        method.setRequestHeader(new Header("Accept", "text/xml"));
+        spotlightResponse = request(method);
+        doc = loadXMLFromString(spotlightResponse);
     }
-    
+    catch (javax.xml.parsers.ParserConfigurationException ex) {
+    }
+    catch (org.xml.sax.SAXException ex) {
+    }
+    catch (java.io.IOException ex) {
+    }
+
+    return doc;
+    }
+
     public static Document loadXMLFromString(String xml)  throws org.xml.sax.SAXException, java.io.IOException, javax.xml.parsers.ParserConfigurationException
     {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

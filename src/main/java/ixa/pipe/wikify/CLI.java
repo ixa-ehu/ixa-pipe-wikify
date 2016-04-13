@@ -62,14 +62,14 @@ public class CLI {
 
 
     public static void main(String[] args) throws Exception {
-	CLI cmdLine = new CLI();
-	cmdLine.parseCLI(args);
+        CLI cmdLine = new CLI();
+        cmdLine.parseCLI(args);
     }
 
 
     public final void parseCLI(final String[] args) throws Exception{
-    	
-    	Namespace parsedArguments = null;
+
+        Namespace parsedArguments = null;
 
         // create Argument Parser
         ArgumentParser parser = ArgumentParsers.newArgumentParser(
@@ -83,23 +83,23 @@ public class CLI {
             .choices("2010","2020","2030","2040","2050","2060")
             .required(true)
             .help(
-		  "It is REQUIRED to choose a port number. Port numbers are assigned " +
-		  "alphabetically by language code: de: 2010, en: 2020, es: 2030, fr: 2040, it: 2050, nl: 2060");
+                  "It is REQUIRED to choose a port number. Port numbers are assigned " +
+                  "alphabetically by language code: de: 2010, en: 2020, es: 2030, fr: 2040, it: 2050, nl: 2060");
         parser
-	    .addArgument("-s", "--server")
-	    .required(false)
-	    .setDefault("http://localhost")
-	    .help("Choose hostname in which dbpedia-spotlight rest " +
-        		"server is being executed; this value defaults to 'http://localhost'");
-        
-	parser
-	    .addArgument("-i", "--index")
-	    .setDefault("none")
-	    .help("Path to the 'database' created by MapDB to find the corresponding English crosslingual link");
-	parser
-	    .addArgument("-n", "--name")
-	    .setDefault("none")
-	    .help("Name of the HashMap in the index to be used; i.e. 'esEn' for English crosslingual links for Spanish\n");
+            .addArgument("-s", "--server")
+            .required(false)
+            .setDefault("http://localhost")
+            .help("Choose hostname in which dbpedia-spotlight rest " +
+                        "server is being executed; this value defaults to 'http://localhost'");
+
+        parser
+            .addArgument("-i", "--index")
+            .setDefault("none")
+            .help("Path to the 'database' created by MapDB to find the corresponding English crosslingual link");
+        parser
+            .addArgument("-n", "--name")
+            .setDefault("none")
+            .help("Name of the HashMap in the index to be used; i.e. 'esEn' for English crosslingual links for Spanish\n");
 
 
         /*
@@ -108,64 +108,64 @@ public class CLI {
 
         // catch errors and print help
         try {
-	    parsedArguments = parser.parseArgs(args);
+            parsedArguments = parser.parseArgs(args);
         } catch (ArgumentParserException e) {
-	    parser.handleError(e);
-	    System.out
-		.println("Run java -jar target/ixa-pipe-wikify-1.3.0.jar -help for details");
-	    System.exit(1);
+            parser.handleError(e);
+            System.out
+                .println("Run java -jar target/ixa-pipe-wikify-1.3.0.jar -help for details");
+            System.exit(1);
         }
 
         String port = parsedArguments.getString("port");
         String host = parsedArguments.getString("server");
-	String index = parsedArguments.getString("index");
-	String hashName = parsedArguments.getString("name");
-	/*
-	if(cross){
-	    String jarpath = this.getClass().getResource("").getPath();
-	    Matcher matcher = JARPATH_PATTERN_BEGIN.matcher(jarpath);
-	    jarpath = matcher.replaceAll("");
-	    matcher = JARPATH_PATTERN_END.matcher(jarpath);
-	    jarpath = matcher.replaceAll("");
-	    crosslinkMappingIndexFile = jarpath + "/resources/wikipedia-db";
-	    if (!Files.isRegularFile(Paths.get(crosslinkMappingIndexFile))) {
-		System.err.println("As you are using -c/--cross  parameter, wikipedia-db file not found. wikipedia-db* files must exist under 'resources/' folder.");
-		throw new Exception();
-	    }
-	}
-	*/
-	    
-	// Input
-	BufferedReader stdInReader = null;
-	// Output
-	BufferedWriter w = null;
+        String index = parsedArguments.getString("index");
+        String hashName = parsedArguments.getString("name");
+        /*
+        if(cross){
+            String jarpath = this.getClass().getResource("").getPath();
+            Matcher matcher = JARPATH_PATTERN_BEGIN.matcher(jarpath);
+            jarpath = matcher.replaceAll("");
+            matcher = JARPATH_PATTERN_END.matcher(jarpath);
+            jarpath = matcher.replaceAll("");
+            crosslinkMappingIndexFile = jarpath + "/resources/wikipedia-db";
+            if (!Files.isRegularFile(Paths.get(crosslinkMappingIndexFile))) {
+                System.err.println("As you are using -c/--cross  parameter, wikipedia-db file not found. wikipedia-db* files must exist under 'resources/' folder.");
+                throw new Exception();
+            }
+        }
+        */
 
-	stdInReader = new BufferedReader(new InputStreamReader(System.in,"UTF-8"));
-	w = new BufferedWriter(new OutputStreamWriter(System.out,"UTF-8"));
-	KAFDocument kaf = KAFDocument.createFromStream(stdInReader);
-	
-	String lang = kaf.getLang();
+        // Input
+        BufferedReader stdInReader = null;
+        // Output
+        BufferedWriter w = null;
 
-	KAFDocument.LinguisticProcessor lp = kaf.addLinguisticProcessor("markables", "ixa-pipe-wikify-" + lang, version + "-" + commit);
-	lp.setBeginTimestamp();
+        stdInReader = new BufferedReader(new InputStreamReader(System.in,"UTF-8"));
+        w = new BufferedWriter(new OutputStreamWriter(System.out,"UTF-8"));
+        KAFDocument kaf = KAFDocument.createFromStream(stdInReader);
 
-	Annotate annotator = new Annotate(index, hashName, lang);
-	try{
-	    List<WF> wordForms = kaf.getWFs();
-	    List<Term> terms = kaf.getTerms();
-	    if (!wordForms.isEmpty() && !terms.isEmpty()){
-		annotator.wikificationToKAF(kaf, host, port);
-	    }
-	}
-	catch (Exception e){
-	    System.err.println("Wikification failed: ");
-	    e.printStackTrace();
-	}
-	finally {
-	    lp.setEndTimestamp();
-	    w.write(kaf.toString());
-	    w.close();
-	}
-    } 
+        String lang = kaf.getLang();
+
+        KAFDocument.LinguisticProcessor lp = kaf.addLinguisticProcessor("markables", "ixa-pipe-wikify-" + lang, version + "-" + commit);
+        lp.setBeginTimestamp();
+
+        Annotate annotator = new Annotate(index, hashName, lang);
+        try{
+            List<WF> wordForms = kaf.getWFs();
+            List<Term> terms = kaf.getTerms();
+            if (!wordForms.isEmpty() && !terms.isEmpty()){
+                annotator.wikificationToKAF(kaf, host, port);
+            }
+        }
+        catch (Exception e){
+            System.err.println("Wikification failed: ");
+            e.printStackTrace();
+        }
+        finally {
+            lp.setEndTimestamp();
+            w.write(kaf.toString());
+            w.close();
+        }
+    }
 
 }
