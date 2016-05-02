@@ -11,7 +11,7 @@ running, the *ixa-pipe-wikify* module takes a [NAF
 document](http://wordpress.let.vupr.nl/naf/) containing *wf* and
 *term* elements as input, performs Wikification for your language
 of choice, and outputs a NAF document with references to DBpedia on *markables*
-element (`<markables source="DBpedia">`)
+element (`<markables source="DBpedia_spotlight">`)
 
 
 ### Module contents
@@ -179,7 +179,7 @@ This step will create a directory called 'target' which contains
 various directories and files. Most importantly, there you will find
 the module executable:
 
-    ixa-pipe-wikify-1.3.0.jar
+    ixa-pipe-wikify-${version}.jar
 
 This executable contains every dependency the module needs, so it is
 completely portable as long as you have a JVM 1.7 installed.
@@ -208,19 +208,22 @@ assigned to each language are the following:
 Once you have a DBpedia Spotlight Rest server running you can send
 queries to it via the *ixa-pipe-wikify* module as follows:
 
-    cat text.txt | ixa-pipe-tok | ixa-pipe-pos | java -jar ixa-pipe-wikify-1.3.0.jar -p $PORT_NUMBER
+    cat text.txt | ixa-pipe-tok | ixa-pipe-pos | java -jar ixa-pipe-wikify-${version}.jar -p $PORT_NUMBER
+
+There are several optional parameters:
++ **-s**: Server. Specify hostname in which dbpedia-spotlight rest server is being executed (default value is 'http://localhost').
++ **-cor**: Boolean value for coreference resolution. When is true, no other filter will be applied (default value is 'false').
++ **-con**: Confidence filter. Selects all entities that have a confidence greater than this double value (default value is '0.0').
++ **-sup**: Support filter. Selects all entities that have a support greater than this integer value (default value is '0').
++ **-i**: Specify the path to the 'database' created by [MapDB](http://www.mapdb.org/) to find the corresponding English crosslingual link (more details below).
++ **-n**: Specify the name of the HashMap in the index to be used; i.e. 'esEn' for English crosslingual links for Spanish (more details below).
 
 
 When the language is other than English, the module offers an
 additional feature. It is possible to set the corresponding English
 entry also. To use this option, execute the module as follows:
 
-    cat text.txt | ixa-pipe-tok | ixa-pipe-pos | java -jar ixa-pipe-wikify-1.1.0.jar -p $PORT_NUMBER -i $INDEX -n $HASH_NAME
-
-These are the extra parameters to be used:
-
-   - **-i**: specify the path to the 'database' created by [MapDB](http://www.mapdb.org/) to find the corresponding English crosslingual link
-   - **-n**: specify the name of the HashMap in the index to be used
+    cat text.txt | ixa-pipe-tok | ixa-pipe-pos | java -jar ixa-pipe-wikify-${version}.jar -p $PORT_NUMBER -i $INDEX -n $HASH_NAME
 
 So far, you can download and untar the following package for Spanish
 crosslingual links:
@@ -230,12 +233,14 @@ crosslingual links:
 
 And then execute as follows (for Spanish): 
 
-    cat text.txt | ixa-pipe-tok | ixa-pipe-pos | java -jar ixa-pipe-wikify-1.1.0.jar -p 2030 -i wikipedia-db -n esEn
+    cat text.txt | ixa-pipe-tok | ixa-pipe-pos | java -jar ixa-pipe-wikify-${version}.jar -p 2030 -i wikipedia-db -n esEn
+
+There are somo other optional parameters:
 
 
 For more options running *ixa-pipe-wikify*:
 
-    java -jar ixa-pipe-wikify-1.3.0.jar -h
+    java -jar ixa-pipe-wikify-${version}.jar -h
 
 
 #### Contact information
