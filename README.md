@@ -235,8 +235,6 @@ And then execute as follows (for Spanish):
 
     cat text.txt | ixa-pipe-tok | ixa-pipe-pos | java -jar ixa-pipe-wikify-${version}.jar -p 2030 -i wikipedia-db -n esEn
 
-There are somo other optional parameters:
-
 
 For more options running *ixa-pipe-wikify*:
 
