@@ -49,14 +49,7 @@ public class CLI {
     private final String version = CLI.class.getPackage().getImplementationVersion();
     private final String commit = CLI.class.getPackage().getSpecificationVersion();
 
-    private static final Pattern WHITESPACE_PATTERN = Pattern.compile("\\s+");
-    private static final Pattern JARPATH_PATTERN_BEGIN = Pattern.compile("file:");
-    private static final Pattern JARPATH_PATTERN_END = Pattern.compile("[^/]+jar!.+");
-
-    private String crosslinkMappingIndexFile;
-    private final String crosslinkMappingHashName = "esEn";
-
-
+    
     public CLI(){
     }
 
@@ -65,19 +58,17 @@ public class CLI {
         CLI cmdLine = new CLI();
         cmdLine.parseCLI(args);
     }
-
+    
 
     public final void parseCLI(final String[] args) throws Exception{
 
         Namespace parsedArguments = null;
 
-        // create Argument Parser
         ArgumentParser parser = ArgumentParsers.newArgumentParser(
-            "ixa-pipe-wikify-1.3.0.jar").description(
-            "ixa-pipe-wikify-1.3.0 is a multilingual Wikification module "
+            "ixa-pipe-wikify-" + version + ".jar").description(
+            "ixa-pipe-wikify-" + version + " is a multilingual Wikification module "
                 + "developed by IXA NLP Group based on DBpedia Spotlight API.\n");
 
-        // specify port
         parser
             .addArgument("-p", "--port")
             .choices("2010","2020","2030","2040","2050","2060")
@@ -90,8 +81,29 @@ public class CLI {
             .required(false)
             .setDefault("http://localhost")
             .help("Choose hostname in which dbpedia-spotlight rest " +
-                        "server is being executed; this value defaults to 'http://localhost'");
-
+                  "server is being executed. Default value: http://localhost");
+        parser
+            .addArgument("-cor", "--coreference")
+            .choices(true,false)
+            .type(Boolean.class)
+            .required(false)
+            .setDefault(false)
+            .help("Coreference resolution. When is true, no other filter will be applied. " +
+                  "Default value: false");
+        parser
+            .addArgument("-con", "--confidence")
+            .type(Double.class)
+            .required(false)
+            .setDefault(0.0)
+            .help("Confidence filter. Selects all entities that have a confidence " +
+                  "greater than this double value. Default value: 0.0");
+        parser
+            .addArgument("-sup", "--support")
+            .type(Integer.class)
+            .required(false)
+            .setDefault(0)
+            .help("Support filter. Selects all entities that have a support greater than this integer value. " +
+                  "Default value: 0");
         parser
             .addArgument("-i", "--index")
             .setDefault("none")
@@ -100,8 +112,8 @@ public class CLI {
             .addArgument("-n", "--name")
             .setDefault("none")
             .help("Name of the HashMap in the index to be used; i.e. 'esEn' for English crosslingual links for Spanish\n");
-
-
+        
+        
         /*
          * Parse the command line arguments
          */
@@ -111,29 +123,17 @@ public class CLI {
             parsedArguments = parser.parseArgs(args);
         } catch (ArgumentParserException e) {
             parser.handleError(e);
-            System.out
-                .println("Run java -jar target/ixa-pipe-wikify-1.3.0.jar -help for details");
+            System.out.println("Run java -jar target/ixa-pipe-wikify-" + version + ".jar -help for details");
             System.exit(1);
         }
 
         String port = parsedArguments.getString("port");
         String host = parsedArguments.getString("server");
+        boolean coreference = parsedArguments.getBoolean("coreference");
+        double confidence = parsedArguments.getDouble("confidence");
+        int support = parsedArguments.getInt("support");
         String index = parsedArguments.getString("index");
         String hashName = parsedArguments.getString("name");
-        /*
-        if(cross){
-            String jarpath = this.getClass().getResource("").getPath();
-            Matcher matcher = JARPATH_PATTERN_BEGIN.matcher(jarpath);
-            jarpath = matcher.replaceAll("");
-            matcher = JARPATH_PATTERN_END.matcher(jarpath);
-            jarpath = matcher.replaceAll("");
-            crosslinkMappingIndexFile = jarpath + "/resources/wikipedia-db";
-            if (!Files.isRegularFile(Paths.get(crosslinkMappingIndexFile))) {
-                System.err.println("As you are using -c/--cross  parameter, wikipedia-db file not found. wikipedia-db* files must exist under 'resources/' folder.");
-                throw new Exception();
-            }
-        }
-        */
 
         // Input
         BufferedReader stdInReader = null;
@@ -145,16 +145,16 @@ public class CLI {
         KAFDocument kaf = KAFDocument.createFromStream(stdInReader);
 
         String lang = kaf.getLang();
-
+        
         KAFDocument.LinguisticProcessor lp = kaf.addLinguisticProcessor("markables", "ixa-pipe-wikify-" + lang, version + "-" + commit);
         lp.setBeginTimestamp();
-
+        
         Annotate annotator = new Annotate(index, hashName, lang);
         try{
             List<WF> wordForms = kaf.getWFs();
             List<Term> terms = kaf.getTerms();
             if (!wordForms.isEmpty() && !terms.isEmpty()){
-                annotator.wikificationToKAF(kaf, host, port);
+                annotator.wikificationToKAF(kaf, host, port, coreference, confidence, support);
             }
         }
         catch (Exception e){

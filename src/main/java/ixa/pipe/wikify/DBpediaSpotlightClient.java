@@ -26,22 +26,16 @@ import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
-
-
 import org.dbpedia.spotlight.exceptions.AnnotationException;
 import org.dbpedia.spotlight.model.Text;
-
 import org.apache.commons.io.IOUtils;
-
 import java.io.*;
 import java.net.URLEncoder;
-
 import org.w3c.dom.Document;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import java.io.StringReader;
 import org.xml.sax.InputSource;
-
 import org.apache.log4j.Logger;
 
 /**
@@ -53,36 +47,32 @@ import org.apache.log4j.Logger;
 public class DBpediaSpotlightClient {
     public Logger LOG = Logger.getLogger(this.getClass());
 
-    private static final double CONFIDENCE = 0.0;
-    private static final int SUPPORT = 0;
-    private static final boolean COREFERENCE = false;
-
     // Create an instance of HttpClient.
     private static HttpClient client = new HttpClient();
 
 
     public String request(HttpMethod method) throws AnnotationException {
-
+        
         String response = null;
-
+        
         // Provide custom retry handler is necessary
         method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
-                new DefaultHttpMethodRetryHandler(3, false));
+                                        new DefaultHttpMethodRetryHandler(3, false));
 
         try {
             // Execute the method.
             int statusCode = client.executeMethod(method);
-
+            
             if (statusCode != HttpStatus.SC_OK) {
                 LOG.error("Method failed: " + method.getStatusLine());
             }
-
+            
             // Read the response body.
             // // Deal with the response.
             // // Use caution: ensure correct character encoding and is not binary data
-        InputStream responseBody =  method.getResponseBodyAsStream();
-        response = IOUtils.toString(responseBody, "UTF-8");
-
+            InputStream responseBody =  method.getResponseBodyAsStream();
+            response = IOUtils.toString(responseBody, "UTF-8");
+            
         } catch (HttpException e) {
             LOG.error("Fatal protocol violation: " + e.getMessage());
             throw new AnnotationException("Protocol error executing HTTP request.",e);
@@ -95,42 +85,39 @@ public class DBpediaSpotlightClient {
             method.releaseConnection();
         }
         return response;
-
     }
 
 
-
-    public Document extract(Text text, String host, String port) throws AnnotationException{
+    public Document extract(Text text, String host, String port, Boolean coreference, Double confidence, int support) throws AnnotationException{
 
         LOG.info("Querying API.");
-    String spotlightResponse = "";
-    Document doc = null;
-    try {
-        String url = host + ":" + port +"/rest/annotate";
-        PostMethod method = new PostMethod(url);
-        method.setRequestHeader("Content-Type","application/x-www-form-urlencoded;charset=utf-8");
-        NameValuePair[] params = {new NameValuePair("text",text.text()), new NameValuePair("confidence",Double.toString(CONFIDENCE)), new NameValuePair("support",Integer.toString(SUPPORT)), new NameValuePair("coreferenceResolution",Boolean.toString(COREFERENCE))};
-        method.setRequestBody(params);
-        method.setRequestHeader(new Header("Accept", "text/xml"));
-        spotlightResponse = request(method);
-        doc = loadXMLFromString(spotlightResponse);
-    }
-    catch (javax.xml.parsers.ParserConfigurationException ex) {
-    }
-    catch (org.xml.sax.SAXException ex) {
-    }
-    catch (java.io.IOException ex) {
+        String spotlightResponse = "";
+        Document doc = null;
+        try {
+            String url = host + ":" + port +"/rest/annotate";
+            PostMethod method = new PostMethod(url);
+            method.setRequestHeader("Content-Type","application/x-www-form-urlencoded;charset=utf-8");
+            NameValuePair[] params = {new NameValuePair("text",text.text()), new NameValuePair("confidence",Double.toString(confidence)), new NameValuePair("support",Integer.toString(support)), new NameValuePair("coreferenceResolution",Boolean.toString(coreference))};
+            method.setRequestBody(params);
+            method.setRequestHeader(new Header("Accept", "text/xml"));
+            spotlightResponse = request(method);
+            doc = loadXMLFromString(spotlightResponse);
+        }
+        catch (javax.xml.parsers.ParserConfigurationException ex) {
+        }
+        catch (org.xml.sax.SAXException ex) {
+        }
+        catch (java.io.IOException ex) {
+        }
+        
+        return doc;
     }
 
-    return doc;
-    }
-
-    public static Document loadXMLFromString(String xml)  throws org.xml.sax.SAXException, java.io.IOException, javax.xml.parsers.ParserConfigurationException
-    {
+    public static Document loadXMLFromString(String xml)  throws org.xml.sax.SAXException, java.io.IOException, javax.xml.parsers.ParserConfigurationException{
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         InputSource is = new InputSource(new StringReader(xml));
         return builder.parse(is);
     }
-
+    
 }
